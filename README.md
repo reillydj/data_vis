@@ -2,11 +2,11 @@
 MSAN 622 Information Visualization
 ==================================
 
-|  **Name:** | Sophie Engle           |
+|  **Name:** | David Reilly           |
 |-----------:|:-----------------------|
-| **Email:** | <sjengle@cs.usfca.edu> |
-|   **Web:** | <http://msan622.github.io/spring-2015-msan622> |
+| **Email:** | <reillydj116@gmail.com>|
+|   **Web:** | <http://reillydj.github.io/data_vis> |
 
 ## About Me ##
 
-I am a professor at the [University of San Francisco](http://www.usfca.edu/). I am the graduate director for the Masters of Science in Computer Science program, and teach courses for the Department of Computer Science and Masters of Science in Analytics program. I have a stubborn yet adorable corgi named Casablanca (after the movie).
+I am a student at the [University of San Francisco](http://www.usfca.edu/) studying in the Master's in Analytics program. This is a repository for assignments in my Data Visualizations course. 
