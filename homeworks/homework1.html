@@ -10,6 +10,8 @@
 	<title>MSAN 622 Homework 1</title>
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
 	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
 
 	<style type="text/css">
     body {
@@ -63,24 +65,40 @@
 
 	<script type="text/javascript">
 		
-		// function get_query_string(qstring) {
-		// 	var stripped = qstring.replace("[^A-z]", "");
-		// 	return stripped;
-		// };
+		var levelC = d3.select("body")
+						.append("div")
+						.attr({
+							"class": "levelC"
+						})
+						.style({
+							"text-align": "center"
+						})
+						.append("h1")
+						.text("Homework 1: Letter Count Bar Chart")
+						.style({
+							"fill": "teal",
+							"font-family": "ubuntu"
+						});
 
-		// var query_string = get_query_string(window.location.search);
+		function get_query_string() {
+			var qstring = window.location.search;
+			var stripped = qstring.replace("[^A-z]", "");
+			return stripped;
+		};
 
-		d3.select("body")
+		var query_string = get_query_string();
+
+		d3.select("body#levelC")
 			.append("p")
-			.text("HELLO?!?!?!?");
-			// .attr(
-			// 	{
-			// 		"fill": "teal",
-			// 		"font-family": "ubuntu",
-			// 		"font-size": "30px",
-			// 		"x": 50,
-			// 		"y": 100
-			// 	});
+			.text(query_string)
+			.attr(
+				{
+					"fill": "teal",
+					"font-family": "ubuntu",
+					"font-size": "30px",
+					"x": 50,
+					"y": 100
+				});
 
 	</script>
 
