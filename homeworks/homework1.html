@@ -167,7 +167,7 @@
 			var yAxis = d3.svg.axis()
 							  .scale(yAxisScale)
 							  .orient("left")
-							  .ticks(max_value)
+							  .ticks(Math.min(max_value, 10))
 							  .tickFormat(d3.format(",.0f"));
 
 			var xScale = d3.scale.ordinal()
@@ -256,14 +256,7 @@
 			d3.select("input").on("change", change);				           
 		}
 
-		if (query_string != '') {
-			d3.select("div.levelC")
-			.append("p")
-			.text("Query String = " + query_string)
-			.style({
-				"color": "#2b8cbe",
-				"text-align": "center"
-			});
+		if (query_string != '') {			
 			console.log(query_string);
 			draw_bar_chart(query_string);
 		} else {
