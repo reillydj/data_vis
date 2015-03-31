@@ -12,6 +12,7 @@
 	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
 	<script type="text/javascript" src="../js/d3.v3.js"></script>
 	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 	<style type="text/css">
     body {
@@ -43,7 +44,7 @@
 
 	.xaxis text {
 	    font-family: sans-serif;
-	    font-size: 11px;
+	    font-size: 13px;
 	}
 
 	</style>
@@ -98,6 +99,7 @@
 		var barPadding = 10;
 		var windw = window.innerWidth;
 		var windh = window.innerHeight;
+		var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
 
 		var margin = {top: 20, right: 30, bottom: 30, left: 40},
 	    w = 760 - margin.left - margin.right,
@@ -165,7 +167,9 @@
 
 			var yAxis = d3.svg.axis()
 							  .scale(yAxisScale)
-							  .orient("left");
+							  .orient("left")
+							  .ticks(d3.max(d3.entries(counter), function(d) { return d.value; }) + 1)
+							  .tickFormat(d3.format(",.0f"));
 
 			var xScale = d3.scale.ordinal()
 							.domain(Object.keys(counter))
@@ -186,6 +190,13 @@
 									.style("display", "block")
 									.style("margin", "auto");
 
+			var tooltip = d3.select("body")
+						    .append("div")
+						    .style("position", "absolute")
+						    .style("z-index", "10")
+						    .style("visibility", "hidden")
+						    .text("a simple tooltip");
+
 			query_count_bar.selectAll("rect")
 				.data(d3.entries(counter))
 				.enter()
@@ -200,7 +211,18 @@
 				.attr("height", function(d, i) {
 					return (yScale(d.value));
 				})
-				.attr("fill", "#2b8cbe");			
+				.attr("fill", function(d, i) {
+					if (vowels.indexOf(d.key) > -1) {
+						return "#2b8cbe";
+					} else {
+						return "#b2df8a";
+					}})
+				.on("mouseover", function(d){
+					tooltip.text("Count = " + d.value); 
+					return tooltip.style("visibility", "visible");
+				})
+				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+				.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
 			var xAxisXMargin = margin.left + barPadding;
 			var xAxisYMargin = margin.top;
