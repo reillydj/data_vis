@@ -91,19 +91,18 @@
 		</p>
 
 	</div>
-
 	<script type="text/javascript">
 		
-		// var h = 500;
-		// var w = 800;
+		// Initialize paddings, margins
 		var barPadding = 10;
 		var windw = window.innerWidth;
 		var windh = window.innerHeight;
-		var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
-
 		var margin = {top: 20, right: 30, bottom: 30, left: 40},
 	    w = 760 - margin.left - margin.right,
 	    h = 400 - margin.top - margin.bottom;
+
+		// Array of vowels
+    	var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
 
 		// Add div box and part one header
 		var levelC = d3.select("body")
@@ -153,9 +152,9 @@
 
 		function draw_bar_chart(string) {
 			// Instantiate counter object from query string
-			var counter = create_char_count_obj(query_string);
-			var values = Object.keys(counter).map(function(key){return counter[key]});
-			var max_value = Math.max.apply(Math, values);
+			var counter = create_char_count_obj(string);
+			var object_values = Object.keys(counter).map(function(key){return counter[key]});
+			var max_value = Math.max.apply(Math, object_values);
 
 			var yScale = d3.scale.linear()
 								 .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
@@ -168,12 +167,12 @@
 			var yAxis = d3.svg.axis()
 							  .scale(yAxisScale)
 							  .orient("left")
-							  .ticks(d3.max(d3.entries(counter), function(d) { return d.value; }) + 1)
+							  .ticks(max_value)
 							  .tickFormat(d3.format(",.0f"));
 
 			var xScale = d3.scale.ordinal()
-							.domain(Object.keys(counter).sort())
-							.rangeBands([0, w], 0.1);
+							.domain(Object.keys(counter))
+							.rangeBands([0, w]);
 
 			var xAxis = d3.svg.axis()
 							  .scale(xScale)
@@ -198,7 +197,8 @@
 						    .text("a simple tooltip");
 
 			query_count_bar.selectAll("rect")
-				.data(d3.entries(counter).sort(function(d) {return d.key}))
+				// .data(d3.entries(counter).sort(function(d) {return d.key}))
+				.data(d3.entries(counter))
 				.enter()
 				.append("rect")
 				.attr("x", function(d, i) {
@@ -218,6 +218,7 @@
 						return "#b2df8a";
 					}})
 				.on("mouseover", function(d) {
+					this.setAttribute('opacity', '0.5');
 					tooltip.text("Count = " + d.value); 
 					return tooltip.style("visibility", "visible");
 				})
@@ -225,6 +226,7 @@
 					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 				})
 				.on("mouseout", function() {
+					this.setAttribute('opacity', '1');
 					return tooltip.style("visibility", "hidden");
 				});
 
@@ -250,6 +252,8 @@
 				           .attr("class", "xaxis")
 				           .attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
 				           .call(xAxis);
+
+			d3.select("input").on("change", change);				           
 		}
 
 		if (query_string != '') {
@@ -270,6 +274,15 @@
 			  	"color": "#2b8cbe",
 			  	"text-align": "center"
 			  })
+			// d3.select("div.levelC")
+			//   .append("p")
+			//   .text("INPUT STRING")
+			//   .append("form")
+			//   .append("input")
+			//   .attr("type", "text")
+			//   .append("input")
+			//   .attr("type", "submit")
+			//   .attr("onClick", "console.log(this.form)")
 		}
 	</script>
 
