@@ -130,14 +130,6 @@
 		// Instantiate stripped query string
 		var query_string = get_query_string();
 
-		d3.select("div.levelC")
-			.append("p")
-			.text("Query String = " + query_string)
-			.style({
-				"color": "#2b8cbe",
-				"text-align": "center"
-			});
-
 		// Generate an counter object
 		// Keys are individual letters in a string
 		// Values are the number of occurences of each key
@@ -157,81 +149,101 @@
 			return counter;
 		}
 
-		// Instantiate counter object from query string
-		var counter = create_char_count_obj(query_string);
-		var values = Object.keys(counter).map(function(key){return counter[key]});
-		var max_value = Math.max.apply(Math, values);
+		function draw_bar_chart(string) {
+			// Instantiate counter object from query string
+			var counter = create_char_count_obj(query_string);
+			var values = Object.keys(counter).map(function(key){return counter[key]});
+			var max_value = Math.max.apply(Math, values);
 
-		var yScale = d3.scale.linear()
-							 .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
-							 .range([0, h]);
+			var yScale = d3.scale.linear()
+								 .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+								 .range([0, h]);
 
-		var yAxisScale = d3.scale.linear()
-						   .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
-						   .range([h, 0]);
+			var yAxisScale = d3.scale.linear()
+							   .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+							   .range([h, 0]);
 
-		var yAxis = d3.svg.axis()
-						  .scale(yAxisScale)
-						  .orient("left");
+			var yAxis = d3.svg.axis()
+							  .scale(yAxisScale)
+							  .orient("left");
 
-		var xScale = d3.scale.ordinal()
-						.domain(Object.keys(counter))
-						.rangeBands([0, w], 0.1);
+			var xScale = d3.scale.ordinal()
+							.domain(Object.keys(counter))
+							.rangeBands([0, w], 0.1);
 
-		var xAxis = d3.svg.axis()
-						  .scale(xScale)
-						  .orient("bottom");
+			var xAxis = d3.svg.axis()
+							  .scale(xScale)
+							  .orient("bottom");
 
-		var query_count_bar = d3.select("div.levelC")
-								.append("svg")
-								.attr({
-									'height': h + margin.top + margin.bottom,
-									'width': w + margin.left + margin.right,
-									'display': 'block',
-									'margin': "auto"
-								})
-								.style("display", "block")
-								.style("margin", "auto");
+			var query_count_bar = d3.select("div.levelC")
+									.append("svg")
+									.attr({
+										'height': h + margin.top + margin.bottom,
+										'width': w + margin.left + margin.right,
+										'display': 'block',
+										'margin': "auto"
+									})
+									.style("display", "block")
+									.style("margin", "auto");
 
-		query_count_bar.selectAll("rect")
-			.data(d3.entries(counter))
-			.enter()
-			.append("rect")
-			.attr("x", function(d, i) {
-				return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
-			})
-			.attr("y", function(d, i) {
-				return h - yScale(d.value) + margin.top;
-			})
-			.attr("width", w / d3.entries(counter).length - barPadding)
-			.attr("height", function(d, i) {
-				return (yScale(d.value));
-			})
-			.attr("fill", "#2b8cbe");			
+			query_count_bar.selectAll("rect")
+				.data(d3.entries(counter))
+				.enter()
+				.append("rect")
+				.attr("x", function(d, i) {
+					return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
+				})
+				.attr("y", function(d, i) {
+					return h - yScale(d.value) + margin.top;
+				})
+				.attr("width", w / d3.entries(counter).length - barPadding)
+				.attr("height", function(d, i) {
+					return (yScale(d.value));
+				})
+				.attr("fill", "#2b8cbe");			
 
-		var xAxisXMargin = margin.left + barPadding;
-		var xAxisYMargin = margin.top;
+			var xAxisXMargin = margin.left + barPadding;
+			var xAxisYMargin = margin.top;
 
-		query_count_bar.append("g")
-						.attr("class", "axis")
-						.attr("transform", "rotate(90)")
-						.attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
-						.call(yAxis)
-						.append("text")
-					    .attr("transform", "rotate(-90)")
-					    .attr("y", 6)
-					    .attr("dy", ".71em")
-					    .style("text-anchor", "end")
-					    .text("Count");
+			query_count_bar.append("g")
+							.attr("class", "axis")
+							.attr("transform", "rotate(90)")
+							.attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
+							.call(yAxis)
+							.append("text")
+						    .attr("transform", "rotate(-90)")
+						    .attr("y", 6)
+						    .attr("dy", ".71em")
+						    .style("text-anchor", "end")
+						    .text("Count");
 
-		var yAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
-		var yAxisYMargin = h + margin.bottom - barPadding;
+			var yAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
+			var yAxisYMargin = h + margin.bottom - barPadding;
 
-		query_count_bar.append("g")
-			           .attr("class", "xaxis")
-			           .attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
-			           .call(xAxis);
+			query_count_bar.append("g")
+				           .attr("class", "xaxis")
+				           .attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
+				           .call(xAxis);
+		}
 
+		if (query_string != '') {
+			d3.select("div.levelC")
+			.append("p")
+			.text("Query String = " + query_string)
+			.style({
+				"color": "#2b8cbe",
+				"text-align": "center"
+			});
+			draw_bar_chart(query_string);
+		} else {
+			d3.select("div.levelC")
+			  .append("p")
+			  .text("Please add a query string to the end of the URL, e.g. url.html?myQueryString")
+			  .style({
+			  	"color": "#2b8cbe",
+			  	"text-align": "center"
+			  })
+		}
 	</script>
 
 	<hr/>
