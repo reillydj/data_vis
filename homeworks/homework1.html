@@ -18,6 +18,34 @@
         padding-top: 50px;
         padding-bottom: 20px;
     }
+
+	.axis path,
+	.axis line {
+	    fill: none;
+	    stroke: #000;
+	    stroke-width: 3;
+	    width: 20px;
+	    shape-rendering: crispEdges;
+	}
+
+	.axis text {
+	    font-family: sans-serif;
+	    font-size: 11px;
+	}
+
+	.xaxis path,
+	.xaxis line {
+	    fill: none;
+	    stroke: none;
+	    width: 20px;
+	    shape-rendering: crispEdges;
+	}
+
+	.xaxis text {
+	    font-family: sans-serif;
+	    font-size: 11px;
+	}
+
 	</style>
 </head>
 
@@ -65,44 +93,146 @@
 
 	<script type="text/javascript">
 		
+		// var h = 500;
+		// var w = 800;
+		var barPadding = 10;
+		var windw = window.innerWidth;
+		var windh = window.innerHeight;
+
+		var margin = {top: 20, right: 30, bottom: 30, left: 40},
+	    w = 760 - margin.left - margin.right,
+	    h = 400 - margin.top - margin.bottom;
+
+		// Add div box and part one header
 		var levelC = d3.select("body")
 						.append("div")
 						.attr({
-							"class": "levelC"
-						})
-						.style({
-							"text-align": "center"
+							"class": "levelC",
+							"display": "block",
+							"align-items": "center",
+							"justify-content": "center"
 						})
 						.append("h1")
-						.text("Homework 1: Letter Count Bar Chart")
 						.style({
-							"fill": "teal",
-							"font-family": "ubuntu"
-						});
+							"text-align": "center",
+						})
+						.text("Homework 1: Letter Count Bar Chart")
+						.style("color", "#2b8cbe");
 
+		// Grab query string, remove non-alphanumeric characters
 		function get_query_string() {
 			var qstring = window.location.search;
-			var stripped = qstring.replace("[^A-z]", "");
-			return stripped;
+			var stripped = qstring.replace(/[^A-z]/g, "");
+			var lower = stripped.toLowerCase();
+			return lower;
 		};
 
+		// Instantiate stripped query string
 		var query_string = get_query_string();
 
-		d3.select("body#levelC")
+		d3.select("div.levelC")
 			.append("p")
-			.text(query_string)
-			.attr(
-				{
-					"fill": "teal",
-					"font-family": "ubuntu",
-					"font-size": "30px",
-					"x": 50,
-					"y": 100
-				});
+			.text("Query String = " + query_string)
+			.style({
+				"color": "#2b8cbe",
+				"text-align": "center"
+			});
+
+		// Generate an counter object
+		// Keys are individual letters in a string
+		// Values are the number of occurences of each key
+		function create_char_count_obj(string) {
+			var counter = {};
+
+			for (var i = 0; i < string.length; i++) {
+				var sub_char = string.charAt(i)
+
+				if(sub_char in counter) {
+					counter[sub_char]++;
+				} else {
+					counter[sub_char] = 1;
+				}
+			}
+			console.log(counter);
+			return counter;
+		}
+
+		// Instantiate counter object from query string
+		var counter = create_char_count_obj(query_string);
+		var values = Object.keys(counter).map(function(key){return counter[key]});
+		var max_value = Math.max.apply(Math, values);
+
+		var yScale = d3.scale.linear()
+							 .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+							 .range([0, h]);
+
+		var yAxisScale = d3.scale.linear()
+						   .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+						   .range([h, 0]);
+
+		var yAxis = d3.svg.axis()
+						  .scale(yAxisScale)
+						  .orient("left");
+
+		var xScale = d3.scale.ordinal()
+						.domain(Object.keys(counter))
+						.rangeBands([0, w], 0.1);
+
+		var xAxis = d3.svg.axis()
+						  .scale(xScale)
+						  .orient("bottom");
+
+		var query_count_bar = d3.select("div.levelC")
+								.append("svg")
+								.attr({
+									'height': h + margin.top + margin.bottom,
+									'width': w + margin.left + margin.right,
+									'display': 'block',
+									'margin': "auto"
+								})
+								.style("display", "block")
+								.style("margin", "auto");
+
+		query_count_bar.selectAll("rect")
+			.data(d3.entries(counter))
+			.enter()
+			.append("rect")
+			.attr("x", function(d, i) {
+				return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
+			})
+			.attr("y", function(d, i) {
+				return h - yScale(d.value) + margin.top;
+			})
+			.attr("width", w / d3.entries(counter).length - barPadding)
+			.attr("height", function(d, i) {
+				return (yScale(d.value));
+			})
+			.attr("fill", "#2b8cbe");			
+
+		var xAxisXMargin = margin.left + barPadding;
+		var xAxisYMargin = margin.top;
+
+		query_count_bar.append("g")
+						.attr("class", "axis")
+						.attr("transform", "rotate(90)")
+						.attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
+						.call(yAxis)
+						.append("text")
+					    .attr("transform", "rotate(-90)")
+					    .attr("y", 6)
+					    .attr("dy", ".71em")
+					    .style("text-anchor", "end")
+					    .text("Count");
+
+		var yAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
+		var yAxisYMargin = h + margin.bottom - barPadding;
+
+		query_count_bar.append("g")
+			           .attr("class", "xaxis")
+			           .attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
+			           .call(xAxis);
 
 	</script>
-
-
 
 	<hr/>
 
