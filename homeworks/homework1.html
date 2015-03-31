@@ -234,11 +234,12 @@
 				"color": "#2b8cbe",
 				"text-align": "center"
 			});
+			console.log(query_string);
 			draw_bar_chart(query_string);
 		} else {
 			d3.select("div.levelC")
 			  .append("p")
-			  .text("Please add a query string to the end of the URL, e.g. url.html?myQueryString")
+			  .text("Please add a query string to the end of the URL and refresh the page, e.g. url.html?myQueryString")
 			  .style({
 			  	"color": "#2b8cbe",
 			  	"text-align": "center"
