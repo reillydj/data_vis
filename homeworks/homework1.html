@@ -172,7 +172,7 @@
 							  .tickFormat(d3.format(",.0f"));
 
 			var xScale = d3.scale.ordinal()
-							.domain(Object.keys(counter))
+							.domain(Object.keys(counter).sort())
 							.rangeBands([0, w], 0.1);
 
 			var xAxis = d3.svg.axis()
@@ -198,7 +198,7 @@
 						    .text("a simple tooltip");
 
 			query_count_bar.selectAll("rect")
-				.data(d3.entries(counter))
+				.data(d3.entries(counter).sort(function(d) {return d.key}))
 				.enter()
 				.append("rect")
 				.attr("x", function(d, i) {
@@ -217,12 +217,16 @@
 					} else {
 						return "#b2df8a";
 					}})
-				.on("mouseover", function(d){
+				.on("mouseover", function(d) {
 					tooltip.text("Count = " + d.value); 
 					return tooltip.style("visibility", "visible");
 				})
-				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-				.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+				.on("mousemove", function() {
+					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+				})
+				.on("mouseout", function() {
+					return tooltip.style("visibility", "hidden");
+				});
 
 			var xAxisXMargin = margin.left + barPadding;
 			var xAxisYMargin = margin.top;
