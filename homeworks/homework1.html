@@ -13,8 +13,11 @@
 	<script type="text/javascript" src="../js/d3.v3.js"></script>
 	<script type="text/javascript" src="../js/d3.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
 
 	<style type="text/css">
+    
     body {
         padding-top: 50px;
         padding-bottom: 20px;
@@ -93,18 +96,7 @@
 	</div>
 	<script type="text/javascript">
 		
-		// Initialize paddings, margins
-		var barPadding = 10;
-		var windw = window.innerWidth;
-		var windh = window.innerHeight;
-		var margin = {top: 20, right: 30, bottom: 30, left: 40},
-	    w = 760 - margin.left - margin.right,
-	    h = 400 - margin.top - margin.bottom;
-
-		// Array of vowels
-    	var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
-
-		// Add div box and part one header
+		// Add div box to hold bar chart and part one header
 		var levelC = d3.select("body")
 						.append("div")
 						.attr({
@@ -117,10 +109,10 @@
 						.style({
 							"text-align": "center",
 						})
-						.text("Homework 1: Letter Count Bar Chart")
-						.style("color", "#2b8cbe");
+						.text("Homework 1: Letter Count Bar Chart");
+						// .style("color", "#2b8cbe");
 
-		// Grab query string, remove non-alphanumeric characters
+		// Grab query string, remove non-alphanumeric characters, convert to lowercase, and return
 		function get_query_string() {
 			var qstring = window.location.search;
 			var stripped = qstring.replace(/[^A-z]/g, "");
@@ -131,7 +123,7 @@
 		// Instantiate stripped query string
 		var query_string = get_query_string();
 
-		// Generate an counter object
+		// Generate a counter object
 		// Keys are individual letters in a string
 		// Values are the number of occurences of each key
 		function create_char_count_obj(string) {
@@ -146,29 +138,45 @@
 					counter[sub_char] = 1;
 				}
 			}
-			console.log(counter);
+			console.log(counter); // Log counter object
 			return counter;
 		}
 
+		// This function takes a query string and creates a bar chart of the character frequencies
 		function draw_bar_chart(string) {
+
+			// Initialize paddings, margins
+			var barPadding = 10;
+			var windw = window.innerWidth;
+			var windh = window.innerHeight;
+			var margin = {top: 20, right: 30, bottom: 30, left: 40},
+		    w = 760 - margin.left - margin.right,
+		    h = 400 - margin.top - margin.bottom;
+
+			// Array of vowels
+	    	var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
+
 			// Instantiate counter object from query string
 			var counter = create_char_count_obj(string);
+
+			// Grab values and maximum value from counter
 			var object_values = Object.keys(counter).map(function(key){return counter[key]});
 			var max_value = Math.max.apply(Math, object_values);
 
+			// Instantiate x and y scales and axes
 			var yScale = d3.scale.linear()
-								 .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+								 .domain([0, max_value])
 								 .range([0, h]);
 
 			var yAxisScale = d3.scale.linear()
-							   .domain([0, d3.max(d3.entries(counter), function(d) { return d.value; })])
+							   .domain([0, max_value])
 							   .range([h, 0]);
 
 			var yAxis = d3.svg.axis()
 							  .scale(yAxisScale)
 							  .orient("left")
-							  .ticks(Math.min(max_value, 10))
-							  .tickFormat(d3.format(",.0f"));
+							  .ticks(Math.min(max_value, 10)) // Keep from y-axis containing too many ticks
+							  .tickFormat(d3.format(",.0f")); // Remove decimal points from ticks
 
 			var xScale = d3.scale.ordinal()
 							.domain(Object.keys(counter))
@@ -178,6 +186,7 @@
 							  .scale(xScale)
 							  .orient("bottom");
 
+			// Append svg object to div box
 			var query_count_bar = d3.select("div.levelC")
 									.append("svg")
 									.attr({
@@ -189,54 +198,62 @@
 									.style("display", "block")
 									.style("margin", "auto");
 
+			// Append tooltips for mouseover
 			var tooltip = d3.select("body")
 						    .append("div")
 						    .style("position", "absolute")
 						    .style("z-index", "10")
 						    .style("visibility", "hidden")
-						    .text("a simple tooltip");
+						    .style("font-weight", "900")
+						    // .style("color", "#ca0020");
+						    .style("color", "black");
 
+			// Generate bars
 			query_count_bar.selectAll("rect")
-				// .data(d3.entries(counter).sort(function(d) {return d.key}))
 				.data(d3.entries(counter))
 				.enter()
 				.append("rect")
-				.attr("x", function(d, i) {
+				.attr("x", function(d, i) { // Shift bars to make space for y-axis
 					return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
 				})
-				.attr("y", function(d, i) {
+				.attr("y", function(d, i) { // Shift bars to make space for x-axis
 					return h - yScale(d.value) + margin.top;
 				})
 				.attr("width", w / d3.entries(counter).length - barPadding)
-				.attr("height", function(d, i) {
+				.attr("height", function(d, i) { // Scale values
 					return (yScale(d.value));
 				})
-				.attr("fill", function(d, i) {
+				.attr("fill", function(d, i) { // Color bars based on whether or not character is a vowel
 					if (vowels.indexOf(d.key) > -1) {
-						return "#2b8cbe";
+						// return "#2b8cbe";
+						return "#66c2a5";
 					} else {
-						return "#b2df8a";
+						// return "#b2df8a";
+						// return '#404040';
+						return "#8da0cb";
 					}})
-				.on("mouseover", function(d) {
+				.on("mouseover", function(d) { // Add tooltip and color change on mouseover
 					this.setAttribute('opacity', '0.5');
 					tooltip.text("Count = " + d.value); 
 					return tooltip.style("visibility", "visible");
 				})
-				.on("mousemove", function() {
+				.on("mousemove", function() { // Track tooltip
 					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 				})
-				.on("mouseout", function() {
+				.on("mouseout", function() { // Remove tooltip on mouseout
 					this.setAttribute('opacity', '1');
 					return tooltip.style("visibility", "hidden");
 				});
 
-			var xAxisXMargin = margin.left + barPadding;
-			var xAxisYMargin = margin.top;
+			// Instantiate y-axis margins
+			var yAxisXMargin = margin.left + barPadding;
+			var yAxisYMargin = margin.top;
 
+			// Add y-axis
 			query_count_bar.append("g")
 							.attr("class", "axis")
 							.attr("transform", "rotate(90)")
-							.attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
+							.attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
 							.call(yAxis)
 							.append("text")
 						    .attr("transform", "rotate(-90)")
@@ -245,17 +262,20 @@
 						    .style("text-anchor", "end")
 						    .text("Count");
 
-			var yAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
-			var yAxisYMargin = h + margin.bottom - barPadding;
+			// Instantiate x-axis margins
+			var xAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
+			var xAxisYMargin = h + margin.bottom - barPadding;
 
+			// Add x-axis
 			query_count_bar.append("g")
 				           .attr("class", "xaxis")
-				           .attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
+				           .attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
 				           .call(xAxis);
 
-			d3.select("input").on("change", change);				           
 		}
 
+		// If there is a query string, call main function.
+		// Otherwise, display text asking for viewer to add a query string
 		if (query_string != '') {			
 			console.log(query_string);
 			draw_bar_chart(query_string);
@@ -266,7 +286,16 @@
 			  .style({
 			  	"color": "#2b8cbe",
 			  	"text-align": "center"
-			  })
+			  });
+			// d3.select("div.levelC")
+			//   .append("label")
+			//   .attr("for", "QueryString")
+			//   .text("Query String")
+			//   .append("input")
+			//   .attr("name", "QueryString")
+			//   .attr("id", "QueryString")
+			//   .attr("type", "text");
+
 			// d3.select("div.levelC")
 			//   .append("p")
 			//   .text("INPUT STRING")
@@ -277,10 +306,62 @@
 			//   .attr("type", "submit")
 			//   .attr("onClick", "console.log(this.form)")
 		}
+
 	</script>
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
 
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>
+
+            <div class="media-body">
+            	<h3>Implemented Functionality</h3>
+                <ul>
+                	<li>function: <em>get_query_string()</em> grabs query string from URL and removes non-ascii characters</li>
+                	<li>function: <em>create_char_count_obj(string)</em> creates a javascript object from string of the form {character: frequency}</li>
+                	<li>function: <em>draw_bar_chart(string)</em> takes a string as input and creates a bar chart of each character's frequency</li>
+                	<li>modification: <em>var yAxis</em> number of y-axis ticks is made to be the minimum of the maximum frequency found in the query string or 10 in order to keep y-axis ticks from becoming too frequent</li>
+                	<li>modification: <em>var yAxis</em> removed decimal points from y-axis ticks</li>
+                	<li>modification: <em>.axis line</em> increased stroke-width of y-axis line</li>
+                	<li>modification: <em>.xaxis line</em> removed x-axis line</li>
+                	<li>modification: <em>query_count_bar.selectAll("rect")</em> changed color of bar for vowels</li>
+                	<li>interactivity: <em>"mouseover"</em> Added tooltip specifying exact value on mouseover</li>
+                	<li>interactivity: <em>"mouseover"</em> Reduce opacity of bar on mouseover</li>
+                </ul>
+                <p>I chose to color my bars differently for vowels than for consenants. I experimented with many pairs of colors, but the colors that I was happiest with were chosen because they are soft, making them visually palatable, and because they do not emphasize one class over the other. There was no inherent categorical importance to vowels versus consenants, so I did not see a reason in choosing a pair of colors, such as a steel blue and a soft black, that would add uneven emphasis to one class over the other. The softness of the colors I ended up choosing also made the bold tooltip to be very easily visible.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework1.html">homework 1</a></td>
+                </tr>
+
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 	<hr/>
-
 	<footer>
 	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
 	</footer>
