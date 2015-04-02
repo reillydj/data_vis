@@ -159,6 +159,20 @@
 			// Instantiate counter object from query string
 			var counter = create_char_count_obj(string);
 
+			var counter_vowels = d3.entries(counter).filter(function(d) { return vowels.indexOf(d.key) > -1; })
+			var counter_consonants = d3.entries(counter).filter(function(d) { return vowels.indexOf(d.key) < 0; })
+
+			var total_vowels = 0;
+			var total_consonants = 0;
+
+			for (var i = 0; i < counter_vowels.length; i++) {
+				total_vowels += counter_vowels[i].value;
+			}
+
+			for (var i = 0; i < counter_consonants.length; i++) {
+				total_consonants += counter_consonants[i].value;
+			}			
+
 			// Grab values and maximum value from counter
 			var object_values = Object.keys(counter).map(function(key){return counter[key]});
 			var max_value = Math.max.apply(Math, object_values);
@@ -198,7 +212,7 @@
 									.style("display", "block")
 									.style("margin", "auto");
 
-			// Append tooltips for mouseover
+			// Define tooltips for mouseover
 			var tooltip = d3.select("body")
 						    .append("div")
 						    .style("position", "absolute")
@@ -244,6 +258,64 @@
 					this.setAttribute('opacity', '1');
 					return tooltip.style("visibility", "hidden");
 				});
+
+			query_count_bar.append("rect")
+						   .attr("x", w - 4 * margin.right)
+						   .attr("y", 0)
+						   .attr("width", margin.top * 0.8)
+						   .attr("height", margin.top * 0.8)
+						   .attr("fill", "#66c2a5")
+						   .on("mouseover", function() { // Add tooltip and color change on mouseover
+								this.setAttribute('opacity', '0.5');
+								tooltip.text("Total Vowels = " + total_vowels); 
+								return tooltip.style("visibility", "visible");
+						   })
+						   .on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
+						   })
+						   .on("mouseout", function() { // Remove tooltip on mouseout
+								this.setAttribute('opacity', '1');
+								return tooltip.style("visibility", "hidden")
+							});
+
+			query_count_bar.append("text")
+						   .attr("class", "legend")
+						   .attr("x", w - 2.5 * margin.right)
+						   .attr("y", margin.top - 6.5)
+						   .attr("font-family", "ubuntu")
+						   .attr("font-size", "15px")
+						   .attr("fill", "#66c2a5")
+						   .attr("text-anchor", "middle")
+						   .text("Vowels");
+
+			query_count_bar.append("rect")
+						   .attr("class", "legend")
+						   .attr("x", w - margin.left)
+						   .attr("y", 0)
+						   .attr("width", margin.top * 0.8)
+						   .attr("height", margin.top * 0.8)
+						   .attr("fill", "#8da0cb")
+						   .on("mouseover", function() { // Add tooltip and color change on mouseover
+								this.setAttribute('opacity', '0.5');
+								tooltip.text("Total Consonants = " + total_consonants); 
+								return tooltip.style("visibility", "visible");
+						   })
+						   .on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
+						   })
+						   .on("mouseout", function() { // Remove tooltip on mouseout
+								this.setAttribute('opacity', '1');
+								return tooltip.style("visibility", "hidden")
+							});
+
+			query_count_bar.append("text")
+						   .attr("x", w + 0.6 * margin.right)
+						   .attr("y", margin.top - 6.5)
+						   .attr("font-family", "ubuntu")
+						   .attr("font-size", "15px")
+						   .attr("fill", "#8da0cb")
+						   .attr("text-anchor", "middle")
+						   .text("Consonants");
 
 			// Instantiate y-axis margins
 			var yAxisXMargin = margin.left + barPadding;
@@ -329,10 +401,12 @@
                 	<li>modification: <em>.axis line</em> increased stroke-width of y-axis line</li>
                 	<li>modification: <em>.xaxis line</em> removed x-axis line</li>
                 	<li>modification: <em>query_count_bar.selectAll("rect")</em> changed color of bar for vowels</li>
-                	<li>interactivity: <em>"mouseover"</em> Added tooltip specifying exact value on mouseover</li>
-                	<li>interactivity: <em>"mouseover"</em> Reduce opacity of bar on mouseover</li>
+                	<li>modification: <em>rect.legend</em> added legends for vowels and consonants</li>
+                	<li>interactivity: <em>"mouseover"</em> added tooltip over bars specifying exact value on mouseover</li>
+                	<li>interactivity: <em>"mouseover"</em> added tooltip over legends specifying sum of values on mouseover</li>
+                	<li>interactivity: <em>"mouseover"</em> reduce opacity of bar on mouseover</li>
                 </ul>
-                <p>I chose to color my bars differently for vowels than for consenants. I experimented with many pairs of colors, but the colors that I was happiest with were chosen because they are soft, making them visually palatable, and because they do not emphasize one class over the other. There was no inherent categorical importance to vowels versus consenants, so I did not see a reason in choosing a pair of colors, such as a steel blue and a soft black, that would add uneven emphasis to one class over the other. The softness of the colors I ended up choosing also made the bold tooltip to be very easily visible.</p>
+                <p>I chose to color my bars differently for vowels than for consonants. I experimented with many pairs of colors, but the colors that I was happiest with were chosen because they are soft, making them visually palatable, and because they do not emphasize one class over the other. There was no inherent categorical importance to vowels versus consonants, so I did not see a reason in choosing a pair of colors, such as a steel blue and a soft black, that would add uneven emphasis to one class over the other. The softness of the colors I ended up choosing also made the bold tooltip to be very easily visible.</p>
             </div>
         </div>
     </div>
