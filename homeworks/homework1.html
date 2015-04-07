@@ -94,6 +94,7 @@
 		</p>
 
 	</div>
+	<!-- <label><input type="checkbox"> Sort values</label> -->
 	<script type="text/javascript">
 		
 		// Add div box to hold bar chart and part one header
@@ -112,16 +113,24 @@
 						.text("Homework 1: Letter Count Bar Chart");
 						// .style("color", "#2b8cbe");
 
+		levelC.append("h3")
+				.append("label")
+				.text("Sort Values by Frequency")
+				.append("input")
+				.attr("type", "checkbox");
+
 		// Grab query string, remove non-alphanumeric characters, convert to lowercase, and return
 		function get_query_string() {
 			var qstring = window.location.search;
-			var stripped = qstring.replace(/[^A-z]/g, "");
-			var lower = stripped.toLowerCase();
-			return lower;
+			var lower = qstring.toLowerCase();
+			var stripped = lower.replace(/[^a-z]/g, "");
+			return stripped;
 		};
 
 		// Instantiate stripped query string
 		var query_string = get_query_string();
+		var test_counter = d3.entries(create_char_count_obj(query_string));
+		var sorted = test_counter.sort(function(a, b) { return b.value - a.value; });
 
 		// Generate a counter object
 		// Keys are individual letters in a string
@@ -145,30 +154,54 @@
 		// This function takes a query string and creates a bar chart of the character frequencies
 		function draw_bar_chart(string) {
 
-			// Initialize paddings, margins
+			// ** INITIALIZE/INSTANTIATE ALL VARIABLES USED IN THIS FUNCTION ** //
+
+			// Instantiate paddings, margins
 			var barPadding = 10;
 			var windw = window.innerWidth;
 			var windh = window.innerHeight;
-			var margin = {top: 20, right: 30, bottom: 30, left: 40},
-		    w = 760 - margin.left - margin.right,
-		    h = 400 - margin.top - margin.bottom;
+			var margin = {top: 20, right: 30, bottom: 30, left: 40};
+		    var w = 760 - margin.left - margin.right;
+		    var h = 400 - margin.top - margin.bottom;
+			var yAxisXMargin = margin.left + barPadding;
+			var yAxisYMargin = margin.top;
+			var xAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
+			var xAxisYMargin = h + margin.bottom - barPadding;
 
 			// Array of vowels
 	    	var vowels = [ 'a', 'e', 'i', 'o', 'u', 'y' ];
 
-			// Instantiate counter object from query string
+			// Instantiate counter object from query string, {'letter': 'frequency'}
 			var counter = create_char_count_obj(string);
 
+			// Instantiate sorted (by frequency) counter object
+			var sorted = d3.entries(counter).sort(function(a, b) { return b.value - a.value; });
+			
+			// Instantiated sorted (by letter) counter object
+			var sorted_by_key = d3.entries(counter).sort(function(a, b) { return d3.ascending(a.key, b.key)});
+
+			var sorted_letters = [];
+			for (var i = 0; i < sorted_by_key.length; i++) {
+				sorted_letters.push(sorted_by_key[i].key);
+			}
+
+			// Instantiate list of letters, sorted by frequency
+			var sorted_keys = [];
+			for (var i = 0; i < sorted.length; i++) {
+				sorted_keys.push(sorted[i].key);
+			}
+
+			// Instantiate counter object for vowels, counter object for consonants,
+			// and total number of vowels and consonants
 			var counter_vowels = d3.entries(counter).filter(function(d) { return vowels.indexOf(d.key) > -1; })
 			var counter_consonants = d3.entries(counter).filter(function(d) { return vowels.indexOf(d.key) < 0; })
 
 			var total_vowels = 0;
-			var total_consonants = 0;
-
 			for (var i = 0; i < counter_vowels.length; i++) {
 				total_vowels += counter_vowels[i].value;
 			}
 
+			var total_consonants = 0;
 			for (var i = 0; i < counter_consonants.length; i++) {
 				total_consonants += counter_consonants[i].value;
 			}			
@@ -183,8 +216,8 @@
 								 .range([0, h]);
 
 			var yAxisScale = d3.scale.linear()
-							   .domain([0, max_value])
-							   .range([h, 0]);
+							         .domain([0, max_value])
+							         .range([h, 0]);
 
 			var yAxis = d3.svg.axis()
 							  .scale(yAxisScale)
@@ -193,12 +226,17 @@
 							  .tickFormat(d3.format(",.0f")); // Remove decimal points from ticks
 
 			var xScale = d3.scale.ordinal()
-							.domain(Object.keys(counter))
-							.rangeBands([0, w]);
+							     // .domain(sorted_keys)
+							     // .domain(Object.keys(counter))
+							     .domain(sorted_letters)
+							     .rangeBands([0, w]);
 
 			var xAxis = d3.svg.axis()
 							  .scale(xScale)
 							  .orient("bottom");
+
+
+			// ** BEGIN GENERATING VISUALIZATIONS ** //
 
 			// Append svg object to div box
 			var query_count_bar = d3.select("div.levelC")
@@ -209,45 +247,53 @@
 										'display': 'block',
 										'margin': "auto"
 									})
-									.style("display", "block")
-									.style("margin", "auto");
+									.style({
+										"display": "block",
+										"margin": "auto"
+									});
 
 			// Define tooltips for mouseover
 			var tooltip = d3.select("body")
 						    .append("div")
-						    .style("position", "absolute")
-						    .style("z-index", "10")
-						    .style("visibility", "hidden")
-						    .style("font-weight", "900")
-						    // .style("color", "#ca0020");
-						    .style("color", "black");
-
+						    .style({
+						    	"position": "absolute",
+						    	"z-index": "10",
+						    	"visibility": "hidden",
+						    	"font-weight": "900",
+						    	"color": "black"
+						    });
 			// Generate bars
-			query_count_bar.selectAll("rect")
-				.data(d3.entries(counter))
+			var bars = query_count_bar.selectAll("rect")
+				// .data(sorted) // Sort bars by frequency
+				// .data(d3.entries(counter))
+				.data(sorted_by_key)
 				.enter()
 				.append("rect")
+				.attr("class", "bar")
+				.attr("opacity", "0")
 				.attr("x", function(d, i) { // Shift bars to make space for y-axis
 					return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
 				})
-				.attr("y", function(d, i) { // Shift bars to make space for x-axis
-					return h - yScale(d.value) + margin.top;
-				})
+				// .attr("y", function(d, i) { // Shift bars to make space for x-axis
+				// 	return h - yScale(d.value) + margin.top;
+				// })
+				.attr("y", h + margin.top)
 				.attr("width", w / d3.entries(counter).length - barPadding)
-				.attr("height", function(d, i) { // Scale values
-					return (yScale(d.value));
-				})
+				// .attr("height", function(d, i) { // Scale values
+				// 	return (yScale(d.value));
+				// })
+				.attr("height", 0)
 				.attr("fill", function(d, i) { // Color bars based on whether or not character is a vowel
+					d3.select(this).transition().duration(2000);
 					if (vowels.indexOf(d.key) > -1) {
-						// return "#2b8cbe";
 						return "#66c2a5";
 					} else {
-						// return "#b2df8a";
-						// return '#404040';
 						return "#8da0cb";
-					}})
+					}
+				})
 				.on("mouseover", function(d) { // Add tooltip and color change on mouseover
-					this.setAttribute('opacity', '0.5');
+					d3.select(this).transition().duration(100).attr("opacity", "0.5");
+					// this.setAttribute('opacity', '0.5');
 					tooltip.text("Count = " + d.value); 
 					return tooltip.style("visibility", "visible");
 				})
@@ -255,18 +301,34 @@
 					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
 				})
 				.on("mouseout", function() { // Remove tooltip on mouseout
-					this.setAttribute('opacity', '1');
+					d3.select(this).transition().duration(100).attr("opacity", "1");
+					// this.setAttribute('opacity', '1');
 					return tooltip.style("visibility", "hidden");
 				});
 
+
+				bars.transition()
+				    .duration(2000)
+				    .attr("opacity", "1")
+					.attr("height", function(d, i) { // Scale values
+						return (yScale(d.value));
+					})
+					.attr("y", function(d, i) { // Shift bars to make space for x-axis
+						return h - yScale(d.value) + margin.top;
+					});
+			
+			// Add legend for Vowels
 			query_count_bar.append("rect")
-						   .attr("x", w - 4 * margin.right)
-						   .attr("y", 0)
-						   .attr("width", margin.top * 0.8)
-						   .attr("height", margin.top * 0.8)
-						   .attr("fill", "#66c2a5")
+						   .attr({
+						   		"x": w - 4 * margin.right,
+						   		"y": 0,
+						   		"width": margin.top * 0.8,
+						   		"height": margin.top * 0.8,
+						   		"fill": "#66c2a5"
+						   })
 						   .on("mouseover", function() { // Add tooltip and color change on mouseover
-								this.setAttribute('opacity', '0.5');
+								// this.setAttribute('opacity', '0.5');
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
 								tooltip.text("Total Vowels = " + total_vowels); 
 								return tooltip.style("visibility", "visible");
 						   })
@@ -274,29 +336,37 @@
 								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
 						   })
 						   .on("mouseout", function() { // Remove tooltip on mouseout
-								this.setAttribute('opacity', '1');
+								// this.setAttribute('opacity', '1');
+								d3.select(this).transition().duration(100).attr("opacity", "1");
 								return tooltip.style("visibility", "hidden")
-							});
+						   });
 
+			// Add text to Vowels legend
 			query_count_bar.append("text")
-						   .attr("class", "legend")
-						   .attr("x", w - 2.5 * margin.right)
-						   .attr("y", margin.top - 6.5)
-						   .attr("font-family", "ubuntu")
-						   .attr("font-size", "15px")
-						   .attr("fill", "#66c2a5")
-						   .attr("text-anchor", "middle")
+					       .attr({
+					       		"class": "legend",
+					       		"x": w - 2.5 * margin.right,
+					       		"y": margin.top - 6.5,
+					       		"font-family": "ubuntu",
+					       		"font-size": "15px",
+					       		"fill": "#66c2a5",
+					       		"text-anchor": "middle"
+					       })
 						   .text("Vowels");
 
+			// Add legend for Consonants
 			query_count_bar.append("rect")
-						   .attr("class", "legend")
-						   .attr("x", w - margin.left)
-						   .attr("y", 0)
-						   .attr("width", margin.top * 0.8)
-						   .attr("height", margin.top * 0.8)
-						   .attr("fill", "#8da0cb")
+						   .attr({
+						   		"class": "legend",
+						   		"x": w - margin.left,
+						   		"y": 0,
+						   		"width": margin.top * 0.8,
+						   		"height": margin.top * 0.8,
+						   		"fill": "#8da0cb"
+						   })
 						   .on("mouseover", function() { // Add tooltip and color change on mouseover
-								this.setAttribute('opacity', '0.5');
+								// this.setAttribute('opacity', '0.5');
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
 								tooltip.text("Total Consonants = " + total_consonants); 
 								return tooltip.style("visibility", "visible");
 						   })
@@ -304,48 +374,85 @@
 								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
 						   })
 						   .on("mouseout", function() { // Remove tooltip on mouseout
-								this.setAttribute('opacity', '1');
+								// this.setAttribute('opacity', '1');
+								d3.select(this).transition().duration(100).attr("opacity", "1");
 								return tooltip.style("visibility", "hidden")
-							});
+						   });
 
+			// Add text to Consonants legend
 			query_count_bar.append("text")
-						   .attr("x", w + 0.6 * margin.right)
-						   .attr("y", margin.top - 6.5)
-						   .attr("font-family", "ubuntu")
-						   .attr("font-size", "15px")
-						   .attr("fill", "#8da0cb")
-						   .attr("text-anchor", "middle")
+						   .attr({
+						   		"x": w + 0.6 * margin.right,
+						   		"y": margin.top - 6.5,
+						   		"font-family": "ubuntu",
+						   		"font-size": "15px",
+						   		"fill": "#8da0cb",
+						   		"text-anchor": "middle"
+						   })
 						   .text("Consonants");
 
-			// Instantiate y-axis margins
-			var yAxisXMargin = margin.left + barPadding;
-			var yAxisYMargin = margin.top;
-
 			// Add y-axis
-			query_count_bar.append("g")
-							.attr("class", "axis")
-							.attr("transform", "rotate(90)")
-							.attr("transform", "translate(" + yAxisXMargin + "," + yAxisYMargin + ")")
-							.call(yAxis)
-							.append("text")
-						    .attr("transform", "rotate(-90)")
-						    .attr("y", 6)
-						    .attr("dy", ".71em")
-						    .style("text-anchor", "end")
-						    .text("Count");
-
-			// Instantiate x-axis margins
-			var xAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
-			var xAxisYMargin = h + margin.bottom - barPadding;
-
+			var add_y_axis = query_count_bar.append("g")
+						   .attr({
+						   		"opacity": "0",
+						   		"class": "axis",
+						   		"transform": "rotate(90)",
+						   		"transform": "translate("+ yAxisXMargin + "," + yAxisYMargin + ")"
+						   })
+						   .call(yAxis)
+						   .append("text")
+						   .attr({
+						   		"transform": "rotate(-90)",
+						   		"y": 6,
+						   		"dy": ".71em"
+						   })
+						   .style("text-anchor", "end")
+						   .text("Count");
 			// Add x-axis
 			query_count_bar.append("g")
-				           .attr("class", "xaxis")
-				           .attr("transform", "translate(" + xAxisXMargin + "," + xAxisYMargin + ")")
+						   .attr({
+						   		"opacity": "0",
+						   		"class": "xaxis",
+						   		"transform": "translate(" + xAxisXMargin + "," + xAxisYMargin + ")"
+						   })
+						   .transition().duration(2000)
+						   .attr("opacity", "1")
 				           .call(xAxis);
 
-		}
+            query_count_bar.selectAll("g.axis").transition().delay(300).duration(2000).attr("opacity", "1");
 
+            d3.select("input").on("change", change);
+
+		    var sortTimeout = setTimeout(function() {
+		    	d3.select("input").property("checked", true).each(change);
+		    }, 2000);
+
+		    function change() {
+			    clearTimeout(sortTimeout);
+
+			    // Copy-on-write since tweens are evaluated after a delay.
+			    var x0 = xScale.domain(d3.entries(counter).sort(this.checked
+			        ? function(a, b) { return b.value - a.value; }
+			        : function(a, b) { return d3.ascending(a.key, b.key); })
+			        .map(function(d) { return d.key; }))
+			        .copy();
+
+			    query_count_bar.selectAll(".bar")
+			        .sort(function(a, b) { return x0(a.key) - x0(b.key); });
+
+			    var transition = query_count_bar.transition().duration(750),
+			        delay = function(d, i) { return i * 50; };
+
+			    transition.selectAll(".bar")
+			        .delay(delay)
+			        .attr("x", function(d) { return x0(d.key) + margin.left + margin.right + barPadding; });
+
+			    transition.select(".xaxis")
+			        .call(xAxis)
+			        .selectAll("g")
+			        .delay(delay);
+			  }
+		}
 		// If there is a query string, call main function.
 		// Otherwise, display text asking for viewer to add a query string
 		if (query_string != '') {			
@@ -391,7 +498,8 @@
             </div>
 
             <div class="media-body">
-            	<h3>Implemented Functionality</h3>
+            	<h1>Implemented Functionality</h1>
+            	<h3>C-Level Functionality</h3>
                 <ul>
                 	<li>function: <em>get_query_string()</em> grabs query string from URL and removes non-ascii characters</li>
                 	<li>function: <em>create_char_count_obj(string)</em> creates a javascript object from string of the form {character: frequency}</li>
@@ -401,11 +509,22 @@
                 	<li>modification: <em>.axis line</em> increased stroke-width of y-axis line</li>
                 	<li>modification: <em>.xaxis line</em> removed x-axis line</li>
                 	<li>modification: <em>query_count_bar.selectAll("rect")</em> changed color of bar for vowels</li>
-                	<li>modification: <em>rect.legend</em> added legends for vowels and consonants</li>
-                	<li>interactivity: <em>"mouseover"</em> added tooltip over bars specifying exact value on mouseover</li>
-                	<li>interactivity: <em>"mouseover"</em> added tooltip over legends specifying sum of values on mouseover</li>
-                	<li>interactivity: <em>"mouseover"</em> reduce opacity of bar on mouseover</li>
+                	<li>modification: <em>query_count_bar.selectAll("rect")</em> ordered bars by frequency</li>
                 </ul>
+                <h3>B-Level Functionality</h3>
+                	<ul>
+	                	<li>modification: <em>rect.legend</em> added legends for vowels and consonants</li>
+	                	<li>interactivity: <em>"mouseover"</em> added tooltip over bars specifying exact value on mouseover</li>
+	                	<li>interactivity: <em>"mouseover"</em> added tooltip over legends specifying sum of values on mouseover</li>
+	                	<li>interactivity: <em>"mouseover"</em> reduce opacity of bar on mouseover</li>
+	                	<li>interactivity: <em>change()</em> added checkbox to sort bars by alphabetical order or frequency</li>
+                	</ul>
+                <h3>A-Level Functionality</h3>
+                	<ul>
+                		<li>modification: <em>transition</em> grew bars top to bottom at the start of the visualization</li>
+                		<li>modification: <em>transition</em> faded bars and axes in at the start of the visualization</li>
+                	</ul>
+                <p></p>
                 <p>I chose to color my bars differently for vowels than for consonants. I experimented with many pairs of colors, but the colors that I was happiest with were chosen because they are soft, making them visually palatable, and because they do not emphasize one class over the other. There was no inherent categorical importance to vowels versus consonants, so I did not see a reason in choosing a pair of colors, such as a steel blue and a soft black, that would add uneven emphasis to one class over the other. The softness of the colors I ended up choosing also made the bold tooltip to be very easily visible.</p>
             </div>
         </div>
@@ -424,7 +543,7 @@
             <tbody>
                 <tr>
                     <th>Github:</th>
-                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework1.html">homework 1</a></td>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework1.html" target="_blank">homework 1</a></td>
                 </tr>
 
                 <tr>
