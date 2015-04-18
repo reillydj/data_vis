@@ -307,7 +307,6 @@
 						     .attr("opacity", "0.8")
 						     .on("mouseover", function(d) { // Add tooltip and color change on mouseover
 								d3.select(this).transition().duration(100).attr("opacity", "0.5");
-								// this.setAttribute('opacity', '0.5');
 								tooltip.text(d.State); 
 								return tooltip.style("visibility", "visible");
 							})
@@ -316,7 +315,6 @@
 							})
 							.on("mouseout", function() { // Remove tooltip on mouseout
 								d3.select(this).transition().duration(100).attr("opacity", "0.8");
-								// this.setAttribute('opacity', '1');
 								return tooltip.style("visibility", "hidden");
 							});
 
@@ -338,7 +336,6 @@
 						return tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
 				   })
 				   .on("mouseout", function() { // Remove tooltip on mouseout
-						// this.setAttribute('opacity', '1');
 						d3.select(this).transition().duration(100).attr("opacity", "1");
 						return tooltip.style("visibility", "hidden")
 				   });
@@ -349,7 +346,6 @@
 			       		"y": height - 3 * margin.top + 0.5 * radiusScale(5000),
 			       		"font-family": "ubuntu",
 			       		"font-size": "20px",
-			       		// "fill": colorScale("South"),
 			       		"fill": "black",
 			       		"text-anchor": "middle"
 				   })
@@ -373,7 +369,6 @@
 						return tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
 				   })
 				   .on("mouseout", function() { // Remove tooltip on mouseout
-						// this.setAttribute('opacity', '1');
 						d3.select(this).transition().duration(100).attr("opacity", "1");
 						return tooltip.style("visibility", "hidden")
 				   });
@@ -384,7 +379,6 @@
 			       		"y": height - 6 * margin.top + 0.5 * radiusScale(5000),
 			       		"font-family": "ubuntu",
 			       		"font-size": "20px",
-			       		// "fill": colorScale("South"),
 			       		"fill": "black",
 			       		"text-anchor": "middle"
 				   })
@@ -408,7 +402,6 @@
 						return tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
 				   })
 				   .on("mouseout", function() { // Remove tooltip on mouseout
-						// this.setAttribute('opacity', '1');
 						d3.select(this).transition().duration(100).attr("opacity", "1");
 						return tooltip.style("visibility", "hidden")
 				   });
@@ -419,7 +412,6 @@
 			       		"y": height - 9 * margin.top + 0.5 * radiusScale(5000),
 			       		"font-family": "ubuntu",
 			       		"font-size": "20px",
-			       		// "fill": colorScale("South"),
 			       		"fill": "black",
 			       		"text-anchor": "middle"
 				   })
@@ -639,7 +631,6 @@
 				  .data(traits)
 				  .enter().append("svg:g")
 				  .attr("class", "scatter y axis")
-				  // .attr("opacity", "0.0")
 				  .attr("transform", function(d, i) { return "translate(0," + i * size + ")"; })
 				  .each(function(d) { d3.select(this).call(axis.scale(y[d]).orient("right")); });
 
@@ -715,12 +706,7 @@
 
     	function draw_parallel_coordinates() {
 
-    		// var pc2 = d3.parcoords()("#example2");
-
     		d3.csv("../data/state.csv", function(error, csv) {
-
-    			// var data = csv;
-
     			
     			var data = csv;
 				var dimensions = ["StateRegion", "Income", "Illiteracy", "LifeExpectancy", "Murder", "HighSchoolGrad"];
@@ -737,14 +723,11 @@
 				  .hideAxis(["Area"])
 				  .hideAxis(["Frost"])
 				  .color(function(d) { return colorScale(d['StateRegion']); })
-				  // .margin({ top: 24, left: 0, bottom: 12, right: 0 })				  
 				  .ticks(5)
-				  // .brushMode("1D-axes")	
 				  .composite("darker")		
 				  .dimensions(dimensions)	
 				  .margin({ top: 24, left: 150, bottom: 12, right: 0 })  				 
 				  .render()				  
-				  // .alpha(0.35)
 				  .createAxes()
 				  .reorderable();
 				});
@@ -777,6 +760,12 @@
                 	<ul>
                 		<li>Parallel Coordinates</li>
                 	</ul>
+                <p>For my first two graphics, I opted against adding grid lines because I wanted the user to be able to notice
+                	overall trends in the data and not worry about specific values. I also am a huge proponent of leaving grid lines
+                	out of a graphic.
+                </p>
+                <p>The size of circles for my bubble chart were kept from being too large, at the sacrifice of data density of the graphic, in order to reduce the amount of overlap of circles. 
+                </p>
             </div>
         </div>
     </div>
