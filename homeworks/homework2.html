@@ -10,8 +10,10 @@
 	<title>MSAN 622 Homework 1</title>
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
 	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
 	<script type="text/javascript" src="../js/d3.v3.js"></script>
 	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
 	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
@@ -596,13 +598,6 @@
 				             .ticks(5)
 				             .tickSize(size * n);
 
-				// // Brush.
-				// var brush = d3.svg.brush()
-				//               .on("brushstart", brushstart)
-				//               .on("brush", brush)
-				//               .on("brushend", brushend);
-
-							                // Root panel.
 				var svg = d3.select(".levelB").append("svg:svg")
 				  .attr("width", 1300)
 				  .attr("height", 1000)
@@ -619,8 +614,6 @@
 				  .enter().append("svg:g")
 				  .attr("class", "legend")
 				  .attr("transform", function(d, i) { return "translate(-179," + (i * 20 + 365) + ")"; });
-
-
 
 			    legend.append("svg:circle")
 					.attr("class", String)
@@ -682,44 +675,14 @@
 					cell.selectAll("circle")
 					    .data(data)
 					  .enter().append("svg:circle")
-					  	// .attr("id", "circles")
 					    .attr("class", function(d) { return d.StateRegion; })
 					    .attr("cx", function(d) { return x[p.x](d[p.x]); })
 					    .attr("cy", function(d) { return y[p.y](d[p.y]); })
 					    .attr("r", 6)
 					    .attr("opacity", "1")
-					    // .attr("fill", function(d) { return colorScale(d.StateRegion); });
+					    .attr("fill", function(d) { return colorScale(d.StateRegion); });
 
-					// Plot brush.
-					// cell.call(brush.x(x[p.x]).y(y[p.y]));
 				}
-
-				//   // Clear the previously-active brush, if any.
-				// function brushstart(p) {
-				// 	if (brush.data !== p) {
-				// 	  cell.call(brush.clear());
-				// 	  brush.x(x[p.x]).y(y[p.y]).data = p;
-				// 	}
-				// }
-
-				//   // Highlight the selected circles.
-				// function brush(p) {
-				// 	var e = brush.extent();
-				// 	svg.selectAll(".cell circle").attr("class", function(d) {
-				// 	  return e[0][0] <= d[p.x] && d[p.x] <= e[1][0]
-				// 	      && e[0][1] <= d[p.y] && d[p.y] <= e[1][1]
-				// 	      ? d.StateRegion : null;
-				// 	});
-				// }
-
-				// // If the brush is empty, select all circles.
-				// function brushend() {
-				// 	if (brush.empty()) {
-				// 		svg.selectAll(".cell circle").attr("class", function(d) { 
-				// 			return d.StateRegion; 
-				// 		}) 
-				// 	};
-				// }
 
 				function cross(a, b) {
 					var c = [], n = a.length, m = b.length, i, j;
@@ -730,6 +693,63 @@
 			})
     	}
     	draw_scatterplot_matrix();
+
+		var levelA = d3.select("body")
+						.append("div")
+						.attr({
+							"class": "parcoords",
+							"id": "levelA",
+							"display": "block",
+							"align-items": "center"
+							// "align": "center"
+						})
+						.style({
+							"height": "600px",
+							"width": "1000px"
+						})
+						.append("h1")
+						.style({
+							"text-align": "center"
+						})
+						.text("Homework 2: Parallel Coordinates");
+
+    	function draw_parallel_coordinates() {
+
+    		// var pc2 = d3.parcoords()("#example2");
+
+    		d3.csv("../data/state.csv", function(error, csv) {
+
+    			// var data = csv;
+
+    			
+    			var data = csv;
+				var dimensions = ["StateRegion", "Income", "Illiteracy", "LifeExpectancy", "Murder", "HighSchoolGrad"];
+				colorScale = d3.scale.category10();
+				var pc = d3.parcoords()("#levelA")		
+				  .height(500)
+				  .width(1000)	  
+				  .data(data)	
+				  .hideAxis(["State"])
+				  .hideAxis(["Abbreviation"])			  
+				  .hideAxis(['StateDivision'])
+				  .hideAxis(["Population"])
+				  .hideAxis([""])
+				  .hideAxis(["Area"])
+				  .hideAxis(["Frost"])
+				  .color(function(d) { return colorScale(d['StateRegion']); })
+				  // .margin({ top: 24, left: 0, bottom: 12, right: 0 })				  
+				  .ticks(5)
+				  // .brushMode("1D-axes")	
+				  .composite("darker")		
+				  .dimensions(dimensions)	
+				  .margin({ top: 24, left: 150, bottom: 12, right: 0 })  				 
+				  .render()				  
+				  // .alpha(0.35)
+				  .createAxes()
+				  .reorderable();
+				});
+    	}
+    	draw_parallel_coordinates();
 
 
 	</script>
@@ -745,14 +765,17 @@
 
             <div class="media-body">
             	<h1>Implemented Functionality</h1>
-            	<h3>C-Level Functionality</h3>
+            	<h3>Basic Functionality</h3>
                 <ul>
+                	<li>Bubble Chart</li>
                 </ul>
-                <h3>B-Level Functionality</h3>
+                <h3>Moderate Functionality</h3>
                 	<ul>
+                		<li>Scatterplot Matrix</li>
                 	</ul>
-                <h3>A-Level Functionality</h3>
+                <h3>Advanced Functionality</h3>
                 	<ul>
+                		<li>Parallel Coordinates</li>
                 	</ul>
             </div>
         </div>
@@ -789,8 +812,8 @@
 
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
-	<script src="../js/d3.min.js"></script>
-	<script src="../js/d3.v3.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
 </body>
 
 </html>
