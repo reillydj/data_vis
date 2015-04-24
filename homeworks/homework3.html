@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MSAN 622 Homework 3</title>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+    .axis path,
+	.axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	.x.axis path {
+	  display: none;
+	  /*stroke-width: 5px;*/
+	}
+	.area {
+	  fill: steelblue;
+	  clip-path: url(#clip);
+	}
+	.line {
+	  fill: none;
+	  stroke: steelblue;
+	  stroke-width: 2.5px;
+	}
+
+	.brush .extent {
+	  stroke: #fff;
+	  fill-opacity: .125;
+	  shape-rendering: crispEdges;
+	}
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+	    <div class="container">
+
+	        <div class="navbar-header">
+
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle Navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+
+	            <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+	        </div>
+
+	    </div>
+
+	</nav>
+
+	<div class="jumbotron">
+
+	    <div class="container">
+
+	        <h1>My Information Visualization Collection</h1>
+	        <p>Homework 3: Time Series Data Visualization</p>
+
+	    </div>
+
+	</div>
+
+	<div class="container">
+
+		<p style="text-align: center;">
+		    <svg id="demo" height="20" width="300"></svg>
+		</p>
+
+	</div>
+<!-- CSS styles for standard search box -->
+
+	<!-- HTML for SEARCH BAR -->
+<!-- 	<div id="tfheader">
+		<form id="tfnewsearch" action="">
+		        <input type="text" class="tftextinput" name="q" size="21" maxlength="120"><input type="submit" value="search" class="tfbutton">
+		</form>
+	<div class="tfclear"></div>
+	</div> -->
+
+
+	<!-- <label><input type="checkbox"> Sort values</label> -->
+	<script type="text/javascript">
+		// Add div box to hold bar chart and part one header
+		var levelC = d3.select("body")
+						.append("div")
+						.attr({
+							"class": "levelC",
+							"display": "block",
+							"align-items": "center",
+							"justify-content": "center"
+						})
+						.append("h1")
+						.style({
+							"text-align": "center"
+						})
+						.text("Homework 3: Line Plot");
+
+		function draw_line_plot() {
+			var tooltip = d3.select("body")
+						    .append("div")
+						    .style({
+						    	"position": "absolute",
+						    	"z-index": "10",
+						    	"visibility": "hidden",
+						    	"font-weight": "900",
+						    	"color": "black",
+						    	"font-size": "15px"
+						    });
+
+			// Chart dimensions.
+			var margin = {top: 19.5, right: 50, bottom: 19.5, left: 39.5}
+			var width = 1200 - margin.right;
+			var height = 600 - margin.top - margin.bottom;
+
+
+
+			var xScale = d3.time.scale().nice().range([2 * margin.left + 1, width]);
+    		var yScale = d3.scale.linear().nice().range([height, margin.top]);		  
+        	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+			var yAxis = d3.svg.axis().scale(yScale).orient("left");
+    		var color = d3.scale.category10();
+			var parseDate = d3.time.format("%b %Y").parse;
+
+			var drivers_lines = d3.svg.line().interpolate('basis')
+			                             .x(function(d) { return xScale(d.Time); })
+			                             .y(function(d) { return yScale(d.Value); });
+
+			var front_lines = d3.svg.line().interpolate('basis')
+			                     .x(function(d) { return xScale(d.Time); })
+			                     .y(function(d) { return yScale(d.Value); });
+
+			var rear_lines = d3.svg.line().interpolate("basis")
+								  .x(function(d) { return xScale(d.Time); })
+								  .y(function(d) { return yScale(d.Value); });
+
+
+			// Create the SVG container and set the origin.
+			var svg = d3.select("div.levelC").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom);
+
+
+		    svg.style({
+    			"display": "block",
+    			"margin": "auto"
+    		});
+
+		    svg.append("g")
+			    .attr("transform", "translate(" + margin.left + 1 + "," + margin.top + ")");
+			
+
+			d3.csv("../data/seatbelts.csv", function(error, csv) {
+				var data = csv;
+
+				color.domain(["drivers", "front", "rear"]);
+
+				data.forEach(function(d, i) {
+					d.Time = parseDate(d.Time);
+				});
+
+				xScale.domain(d3.extent(data, function(d) { return d.Time; }));
+				yScale.domain([50, 2700]);
+				
+				var features = color.domain().map(function(name) {
+					    return {
+					    	name: name,
+					    	values: data.map(function(d) { 
+					    		return {Time: d.Time, Value: +d[name]};
+					    	})
+					    };
+					});
+
+				svg.append("g")
+				    .attr("class", "x axis")
+				    .attr("transform", "translate(" + 0 + "," + height + ")")
+				    .call(xAxis);
+
+			    svg.append("g")
+				    .attr("class", "y axis")
+				    .attr("transform", "translate(" + 2 * margin.left + ",0)")
+				    .call(yAxis);
+
+			    var feature = svg.selectAll(".feature")
+		      				  .data(features)
+		    				  .enter().append("g")
+		      				  .attr("class", "feature");
+
+		        feature.append("path")
+		                .attr("class", "line")
+		                .attr("d", function(d) { 
+		                	if(d.name == "drivers") {
+		                		return drivers_lines(d.values); 
+		                	} else if (d.name == "front") {
+		                		return front_lines(d.values);
+		                	} else if (d.name == "rear") {
+		                		return rear_lines(d.values);
+		                	}
+		                })
+		                .style("stroke", function(d) { return color(d.name); })
+	                	.on("mouseover", function(d) { // Add tooltip and color change on mouseover
+							d3.select(this).transition().duration(100).attr("opacity", "0.5");
+							tooltip.text(d.name); 
+							return tooltip.style("visibility", "visible");
+						})
+						.on("mousemove", function() { // Track tooltip
+							return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+						})
+						.on("mouseout", function() { // Remove tooltip on mouseout
+							d3.select(this).transition().duration(100).attr("opacity", "0.8");
+							return tooltip.style("visibility", "hidden");
+						});
+
+			    feature.append("text")
+				      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+				      .attr("transform", function(d) { 
+		                	if(d.name == "drivers") {
+		                		console.log(d.value);
+		                		return "translate(" + xScale(d.value.Time) + "," + yScale(d.value.Value) + ")"; 
+		                	} else if (d.name == "front") {
+		                		return "translate(" + xScale(d.value.Time) + "," + yScale(d.value.Value) + ")";
+		                	} else if (d.name == "rear") {
+		                		return "translate(" + xScale(d.value.Time) + "," + yScale(d.value.Value) + ")";
+		                	}
+				      })
+				      .attr("x", 3)
+				      .attr("dy", ".35em")
+				      .text(function(d) { return d.name; })
+				      .attr("font-size", 25);
+			});
+		};
+		draw_line_plot();
+		
+		var levelB = d3.select("body")
+						.append("div")
+						.attr({
+							"class": "levelB",
+							"display": "block",
+							"align-items": "center",
+							"justify-content": "center"
+						})
+						.append("h1")
+						.style({
+							"text-align": "center"
+						})
+						.text("Homework 3: Stacked Area Plot");	
+
+		function draw_area_chart() {
+
+
+			// Chart dimensions.
+			var margin = {top: 10, right: 50, bottom: 100, left: 50}
+			var margin2 = {top: 530, right: 50, bottom: 30, left: 50}
+			var width = 1200 - margin.right - margin.left;
+			var height = 600 - margin.top - margin.bottom;
+			var height2 = 600 - margin2.top - margin2.bottom;
+
+			var xScale = d3.time.scale().nice().range([2 * margin.left, width]);
+			var xScale2 = d3.time.scale().nice().range([2 * margin.left, width]);
+    		var yScale = d3.scale.linear().nice().range([height, 0]);		 
+    		var yScale2 = d3.scale.linear().nice().range([height2, 0]);
+
+        	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+        	var xAxis2 = d3.svg.axis().scale(xScale2).orient("bottom");
+			var yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+    		var color = d3.scale.category20();
+
+			var parseDate = d3.time.format("%b %Y").parse;
+
+			var brush = d3.svg.brush()
+						  .x(xScale2)
+						  .on("brush", brushed);
+
+			var area = d3.svg.area()
+			             .interpolate("monotone")
+			    		 .x(function(d) { return xScale(d.Time); })
+			    		 .y0(height)
+			    		 .y1(function(d) { return yScale(d.drivers); });
+
+			var stack = d3.layout.stack()
+			              .values(function(d) { return d.values; });
+
+
+			var area2 = d3.svg.area()
+			 			  .interpolate("monotone")
+			 			  .x(function(d) { return xScale2(d.Time); })
+			 			  .y0(height2)
+			 			  .y1(function(d) { return yScale2(d.drivers); });
+
+			var stack = d3.layout.stack()
+			    		  .values(function(d) { return d.values; });			 			  
+			
+			// Create the SVG container and set the origin.
+			var svg = d3.select("div.levelB").append("svg")
+			    	    .attr("width", width + margin.left + margin.right)
+			    		.attr("height", height + margin.top + margin.bottom + 1000)
+			    		.attr({ 
+			    				'display': 'block',
+								'margin': "auto"
+							  })
+						.style({
+							"display": "block",
+							"margin": "auto"
+						});
+
+			var focus = svg.append("g")
+			    		   .attr("id", "focus")
+			    		   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			svg.append("defs").append("clipPath")
+			   .attr("id", "clip")
+			   .append("rect")
+			   .attr("width", width)
+			   .attr("height", height);
+				   
+			d3.csv("../data/seatbelts.csv", function(error, csv) {
+
+				var data = csv;
+							
+			
+				data.forEach(function(d, i) {
+					d.Time = parseDate(d.Time);
+				});
+
+				xScale.domain(d3.extent(data, function(d) { return d.Time; }));
+				yScale.domain([50, 3000]);
+				xScale2.domain(xScale.domain());
+				yScale2.domain(yScale.domain());
+
+				color.domain(["drivers", "front", "rear"]);
+
+				var features = color.domain().map(function(name) {
+					    return {
+					    	name: name,
+					    	values: data.map(function(d) { 
+					    		return {Time: d.Time, Value: +d[name]};
+					    	})
+					    };
+					});		
+				
+				var context = svg.append("g")
+				    	 		 .attr("class", "context")
+				    			 .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");						                 
+
+			    focus.append("path")
+			      .datum(data)
+			      .attr("class", "area")
+			      .attr("d", area)
+			      .style("fill", "steelblue")
+			      .attr('clip-path', 'url(#clip)');
+
+			    focus.append("g")
+			      .attr("class", "x axis")
+			      .attr("transform", "translate(0," + height + ")")
+			      .call(xAxis);	
+
+			    focus.append("g")
+      				 .attr("class", "y axis")
+      				 .attr("transform", "translate(" + 2 * margin.left + ",0)")
+      				 .call(yAxis);
+
+      			context.append("path")
+      				   .datum(data)
+      				   .attr("class", "area")
+      				   .attr("d", area2);
+
+      			// var shift = height2 + 50;
+      			context.append("g")
+				       .attr("class", "x axis")
+				       .attr("transform", "translate(0," + height2 + ")")
+				       .call(xAxis2);
+
+				context.append("g")
+				       .attr("class", "x brush")
+				       .call(brush)
+				       .selectAll("rect")
+				       .attr("y", -6)
+				       .attr("height", height2 + 7);  					       				
+			});
+		   	
+		   	function brushed() {
+					  xScale.domain(brush.empty() ? xScale2.domain() : brush.extent());
+					  focus.select(".area").attr("d", area);
+					  focus.select(".x.axis").call(xAxis);
+			} 		
+		}	
+		draw_area_chart();
+
+	</script>
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>
+
+            <div class="media-body">
+            	<h1>Implemented Functionality</h1>
+            	<h3>Basic Functionality</h3>
+                <ul>
+                	<li>Bubble Chart</li>
+                </ul>
+                <h3>Moderate Functionality</h3>
+                	<ul>
+                		<li>Scatterplot Matrix</li>
+                	</ul>
+                <h3>Advanced Functionality</h3>
+                	<ul>
+                		<li>Parallel Coordinates</li>
+                	</ul>
+                <p>For my first two graphics, I opted against adding grid lines because I wanted the user to be able to notice
+                	overall trends in the data and not worry about specific values. I also am a huge proponent of leaving grid lines
+                	out of a graphic.
+                </p>
+                <p>The size of circles for my bubble chart were kept from being too large, at the sacrifice of data density of the graphic, in order to reduce the amount of overlap of circles. 
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework3.html" target="_blank">homework 3</a></td>
+                </tr>
+
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	<hr/>
+	<footer>
+	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
+</body>
+
+</html>
