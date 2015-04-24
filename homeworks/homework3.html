@@ -147,16 +147,17 @@
 			var yAxis = d3.svg.axis().scale(yScale).orient("left");
     		var color = d3.scale.category10();
 			var parseDate = d3.time.format("%b %Y").parse;
+			var bisectDate = d3.bisector(function(d) { return d.Time; }).left;
 
-			var drivers_lines = d3.svg.line().interpolate('basis')
+			var drivers_lines = d3.svg.line().interpolate('monotone')
 			                             .x(function(d) { return xScale(d.Time); })
 			                             .y(function(d) { return yScale(d.Value); });
 
-			var front_lines = d3.svg.line().interpolate('basis')
+			var front_lines = d3.svg.line().interpolate('monotone')
 			                     .x(function(d) { return xScale(d.Time); })
 			                     .y(function(d) { return yScale(d.Value); });
 
-			var rear_lines = d3.svg.line().interpolate("basis")
+			var rear_lines = d3.svg.line().interpolate("monotone")
 								  .x(function(d) { return xScale(d.Time); })
 								  .y(function(d) { return yScale(d.Value); });
 
@@ -175,7 +176,6 @@
 		    svg.append("g")
 			    .attr("transform", "translate(" + margin.left + 1 + "," + margin.top + ")");
 			
-
 			d3.csv("../data/seatbelts.csv", function(error, csv) {
 				var data = csv;
 
@@ -202,15 +202,27 @@
 				    .attr("transform", "translate(" + 0 + "," + height + ")")
 				    .call(xAxis);
 
+
 			    svg.append("g")
 				    .attr("class", "y axis")
 				    .attr("transform", "translate(" + 2 * margin.left + ",0)")
 				    .call(yAxis);
+				
+				// Add a y-axis label.
+				svg.append("text")
+				    .attr("class", "y label")
+				    .attr("text-anchor", "end")
+				    .attr("y", margin.left + margin.right)
+				    .attr("dy", ".75em")
+				    .attr("transform", "rotate(-90)")
+				    .text("Drivers Killed")
+				    .style("font-size", "13px");
 
 			    var feature = svg.selectAll(".feature")
 		      				  .data(features)
 		    				  .enter().append("g")
 		      				  .attr("class", "feature");
+  
 
 		        feature.append("path")
 		                .attr("class", "line")
@@ -226,7 +238,7 @@
 		                .style("stroke", function(d) { return color(d.name); })
 	                	.on("mouseover", function(d) { // Add tooltip and color change on mouseover
 							d3.select(this).transition().duration(100).attr("opacity", "0.5");
-							tooltip.text(d.name); 
+							// tooltip.text(d.name); 
 							return tooltip.style("visibility", "visible");
 						})
 						.on("mousemove", function() { // Track tooltip
@@ -236,6 +248,93 @@
 							d3.select(this).transition().duration(100).attr("opacity", "0.8");
 							return tooltip.style("visibility", "hidden");
 						});
+
+	    			var dot = feature.append("g")
+						      .attr("class", "dots")
+						      .selectAll(".dot")
+							  .data(features[0].values)
+						      .enter().append("circle")
+						      .attr("class", "dot")
+						      .style("fill", function(d) { return color("drivers"); })
+						     .attr("cx", function(d, i) {
+						     	return xScale(d.Time);
+						     })
+						     .attr("cy", function(d) {
+						     	return yScale(d.Value);
+						     })
+						     .attr("r", 5)
+						     .attr("opacity", 0)
+						     .on("mouseover", function(d) { // Add tooltip and color change on mouseover
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text("Drivers Killed = " + d.Value); 
+								return tooltip.style("visibility", "visible");
+							})
+							.on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+							})
+							.on("mouseout", function() { // Remove tooltip on mouseout
+								d3.select(this).transition().duration(100).attr("opacity", 0);
+								return tooltip.style("visibility", "hidden")
+							});
+	    			var dot = feature.append("g")
+						      .attr("class", "dots")
+						      .selectAll(".dot")
+						      // .data(data, function(d, i) { 
+						      // 	console.log(d, i);
+						      // 	return {name: d.name, value: d.values[i]}; 
+						      // })
+							  .data(features[1].values)
+						      .enter().append("circle")
+						      .attr("class", "dot")
+						      .style("fill", function(d) { return color("front"); })
+						     .attr("cx", function(d, i) {
+						     	return xScale(d.Time);
+						     })
+						     .attr("cy", function(d) {
+						     	return yScale(d.Value);
+						     })
+						     .attr("r", 5)
+						     .attr("opacity", 0)
+						     .on("mouseover", function(d) { // Add tooltip and color change on mouseover
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text("Drivers Killed = " + d.Value); 
+								return tooltip.style("visibility", "visible");
+							})
+							.on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+							})
+							.on("mouseout", function() { // Remove tooltip on mouseout
+								d3.select(this).transition().duration(100).attr("opacity", 0);
+								return tooltip.style("visibility", "hidden")
+							});
+
+	    			var dot = feature.append("g")
+						      .attr("class", "dots")
+						      .selectAll(".dot")
+							  .data(features[2].values)
+						      .enter().append("circle")
+						      .attr("class", "dot")
+						      .style("fill", function(d) { return color("rear"); })
+						     .attr("cx", function(d, i) {
+						     	return xScale(d.Time);
+						     })
+						     .attr("cy", function(d) {
+						     	return yScale(d.Value);
+						     })
+						     .attr("r", 5)
+						     .attr("opacity", 0)
+						     .on("mouseover", function(d) { // Add tooltip and color change on mouseover
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text("Drivers Killed = " + d.Value);
+								return tooltip.style("visibility", "visible");
+							})
+							.on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+							})
+							.on("mouseout", function() { // Remove tooltip on mouseout
+								d3.select(this).transition().duration(100).attr("opacity", 0);
+								return tooltip.style("visibility", "hidden")
+							});
 
 			    feature.append("text")
 				      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
@@ -269,7 +368,7 @@
 						.style({
 							"text-align": "center"
 						})
-						.text("Homework 3: Stacked Area Plot");	
+						.text("Homework 3: Area Plot");	
 
 		function draw_area_chart() {
 
@@ -281,8 +380,8 @@
 			var height = 600 - margin.top - margin.bottom;
 			var height2 = 600 - margin2.top - margin2.bottom;
 
-			var xScale = d3.time.scale().nice().range([2 * margin.left, width]);
-			var xScale2 = d3.time.scale().nice().range([2 * margin.left, width]);
+			var xScale = d3.time.scale().nice().range([0, width]);
+			var xScale2 = d3.time.scale().nice().range([0, width]);
     		var yScale = d3.scale.linear().nice().range([height, 0]);		 
     		var yScale2 = d3.scale.linear().nice().range([height2, 0]);
 
@@ -320,7 +419,7 @@
 			// Create the SVG container and set the origin.
 			var svg = d3.select("div.levelB").append("svg")
 			    	    .attr("width", width + margin.left + margin.right)
-			    		.attr("height", height + margin.top + margin.bottom + 1000)
+			    		.attr("height", height + margin.top + margin.bottom)
 			    		.attr({ 
 			    				'display': 'block',
 								'margin': "auto"
@@ -372,9 +471,9 @@
 			    focus.append("path")
 			      .datum(data)
 			      .attr("class", "area")
+			      .attr("clip-path", "url(#clip)")
 			      .attr("d", area)
-			      .style("fill", "steelblue")
-			      .attr('clip-path', 'url(#clip)');
+			      .style("fill", "steelblue");
 
 			    focus.append("g")
 			      .attr("class", "x axis")
@@ -383,8 +482,17 @@
 
 			    focus.append("g")
       				 .attr("class", "y axis")
-      				 .attr("transform", "translate(" + 2 * margin.left + ",0)")
+      				 .attr("transform", "translate(" + 0 + ",0)")
       				 .call(yAxis);
+				// Add a y-axis label.
+				svg.append("text")
+				    .attr("class", "y label")
+				    .attr("text-anchor", "end")
+				    .attr("y", margin.left + 7)
+				    .attr("dy", ".75em")
+				    .attr("transform", "rotate(-90)")
+				    .text("Drivers Killed")
+				    .style("font-size", "13px");
 
       			context.append("path")
       				   .datum(data)
@@ -428,22 +536,25 @@
             	<h1>Implemented Functionality</h1>
             	<h3>Basic Functionality</h3>
                 <ul>
-                	<li>Bubble Chart</li>
+                	<li>Multi-Series Line Plot</li>
+                	<li>Area Plot</li>
                 </ul>
                 <h3>Moderate Functionality</h3>
                 	<ul>
-                		<li>Scatterplot Matrix</li>
+                		<li>Panning: Area plot allows for dragging rectangular panning</li>
+                		<li>Details-on-Demand: Multi-Series Line Plot allows for tooltip values for each point</li>
                 	</ul>
                 <h3>Advanced Functionality</h3>
                 	<ul>
-                		<li>Parallel Coordinates</li>
+                		<li>Brushing: Area plot allows for brushing</li>
                 	</ul>
                 <p>For my first two graphics, I opted against adding grid lines because I wanted the user to be able to notice
                 	overall trends in the data and not worry about specific values. I also am a huge proponent of leaving grid lines
-                	out of a graphic.
-                </p>
-                <p>The size of circles for my bubble chart were kept from being too large, at the sacrifice of data density of the graphic, in order to reduce the amount of overlap of circles. 
-                </p>
+                	out of a graphic.</p>
+                <p>I opted for multi-series line plots because I belive it is the easiest way to visualize and compare several different types of time series trends. The tooltip I added allows for the user to see specific values as well as overall trends.</p>
+                <p>The Area plot was chosen because I really enjoyed the idea of allowing both panning and brushing on the same visualization, and the area plot seemed to be a good choice to accomplish this.</p>
+                <p>For data preprocessing, I read the csv into pandas and did some very simple manipulation to get the date to show up correctly.</p>
+                <p>Interaction with my plot is simple. The multi-series line plot only has tooltips on mouseover, whereas the area plot allows for brushing and panning thorugh clicking.</p>
             </div>
         </div>
     </div>
