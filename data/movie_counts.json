@@ -1,0 +1,412 @@
+[
+    {
+        "mpaa": "PG",
+        "year": 1938,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1951,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1955,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1956,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1958,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1960,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1962,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1964,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1965,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1966,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1966,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1968,
+        "counts": 2
+    },
+    {
+        "mpaa": "R",
+        "year": 1968,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1969,
+        "counts": 2
+    },
+    {
+        "mpaa": "R",
+        "year": 1969,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1970,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1970,
+        "counts": 2
+    },
+    {
+        "mpaa": "R",
+        "year": 1970,
+        "counts": 3
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1971,
+        "counts": 3
+    },
+    {
+        "mpaa": "R",
+        "year": 1971,
+        "counts": 2
+    },
+    {
+        "mpaa": "NC-17",
+        "year": 1972,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG",
+        "year": 1972,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1973,
+        "counts": 2
+    },
+    {
+        "mpaa": "NC-17",
+        "year": 1974,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1977,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1978,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1979,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1979,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG",
+        "year": 1980,
+        "counts": 1
+    },
+    {
+        "mpaa": "NC-17",
+        "year": 1981,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1981,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG",
+        "year": 1982,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG",
+        "year": 1983,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1983,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1984,
+        "counts": 3
+    },
+    {
+        "mpaa": "R",
+        "year": 1986,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1989,
+        "counts": 2
+    },
+    {
+        "mpaa": "R",
+        "year": 1989,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1990,
+        "counts": 3
+    },
+    {
+        "mpaa": "PG",
+        "year": 1991,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1991,
+        "counts": 6
+    },
+    {
+        "mpaa": "R",
+        "year": 1992,
+        "counts": 8
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1993,
+        "counts": 1
+    },
+    {
+        "mpaa": "R",
+        "year": 1993,
+        "counts": 5
+    },
+    {
+        "mpaa": "PG",
+        "year": 1994,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1994,
+        "counts": 4
+    },
+    {
+        "mpaa": "R",
+        "year": 1994,
+        "counts": 21
+    },
+    {
+        "mpaa": "NC-17",
+        "year": 1995,
+        "counts": 1
+    },
+    {
+        "mpaa": "PG",
+        "year": 1995,
+        "counts": 9
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1995,
+        "counts": 18
+    },
+    {
+        "mpaa": "R",
+        "year": 1995,
+        "counts": 70
+    },
+    {
+        "mpaa": "PG",
+        "year": 1996,
+        "counts": 14
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1996,
+        "counts": 28
+    },
+    {
+        "mpaa": "R",
+        "year": 1996,
+        "counts": 73
+    },
+    {
+        "mpaa": "NC-17",
+        "year": 1997,
+        "counts": 2
+    },
+    {
+        "mpaa": "PG",
+        "year": 1997,
+        "counts": 15
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1997,
+        "counts": 30
+    },
+    {
+        "mpaa": "R",
+        "year": 1997,
+        "counts": 86
+    },
+    {
+        "mpaa": "PG",
+        "year": 1998,
+        "counts": 16
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1998,
+        "counts": 39
+    },
+    {
+        "mpaa": "R",
+        "year": 1998,
+        "counts": 105
+    },
+    {
+        "mpaa": "PG",
+        "year": 1999,
+        "counts": 16
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 1999,
+        "counts": 47
+    },
+    {
+        "mpaa": "R",
+        "year": 1999,
+        "counts": 119
+    },
+    {
+        "mpaa": "PG",
+        "year": 2000,
+        "counts": 18
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2000,
+        "counts": 65
+    },
+    {
+        "mpaa": "R",
+        "year": 2000,
+        "counts": 96
+    },
+    {
+        "mpaa": "PG",
+        "year": 2001,
+        "counts": 15
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2001,
+        "counts": 70
+    },
+    {
+        "mpaa": "R",
+        "year": 2001,
+        "counts": 125
+    },
+    {
+        "mpaa": "PG",
+        "year": 2002,
+        "counts": 32
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2002,
+        "counts": 71
+    },
+    {
+        "mpaa": "R",
+        "year": 2002,
+        "counts": 133
+    },
+    {
+        "mpaa": "PG",
+        "year": 2003,
+        "counts": 26
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2003,
+        "counts": 57
+    },
+    {
+        "mpaa": "R",
+        "year": 2003,
+        "counts": 95
+    },
+    {
+        "mpaa": "PG",
+        "year": 2004,
+        "counts": 27
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2004,
+        "counts": 67
+    },
+    {
+        "mpaa": "R",
+        "year": 2004,
+        "counts": 81
+    },
+    {
+        "mpaa": "PG",
+        "year": 2005,
+        "counts": 7
+    },
+    {
+        "mpaa": "PG-13",
+        "year": 2005,
+        "counts": 15
+    },
+    {
+        "mpaa": "R",
+        "year": 2005,
+        "counts": 17
+    }
+]

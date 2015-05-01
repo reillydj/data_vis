@@ -302,7 +302,7 @@
     	}
     	draw_bubble_plot();
 
-		function draw_bar_chart() {
+	function draw_bar_chart() {
 
 			// ** INITIALIZE/INSTANTIATE ALL VARIABLES USED IN THIS FUNCTION ** //
 
@@ -562,6 +562,162 @@
 			  }
 		}
 
+		// function draw_line_plot() {
+		// 	var tooltip = d3.select("body")
+		// 				    .append("div")
+		// 				    .style({
+		// 				    	"position": "absolute",
+		// 				    	"z-index": "10",
+		// 				    	"visibility": "hidden",
+		// 				    	"font-weight": "900",
+		// 				    	"color": "black",
+		// 				    	"font-size": "15px"
+		// 				    });
+
+		// 	// Chart dimensions.
+		// 	var margin = {top: 19.5, right: 50, bottom: 19.5, left: 39.5}
+		// 	var width = 700 - margin.right;
+		// 	var height = 600 - margin.top - margin.bottom;
+
+
+
+		// 	var xScale = d3.time.scale().nice().range([2 * margin.left + 1, width]);
+  //   		var yScale = d3.scale.linear().nice().range([height, margin.top]);		  
+  //       	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+		// 	var yAxis = d3.svg.axis().scale(yScale).orient("left");
+  //   		var color = d3.scale.category10();
+		// 	var bisectDate = d3.bisector(function(d) { return d.year; }).left;
+
+		// 	var pg_13_lines = d3.svg.line().interpolate('basis')
+		// 	                             .x(function(d) { return xScale(d.year); })
+		// 	                             .y(function(d) { return yScale(d.Value); });
+
+		// 	var pg_lines = d3.svg.line().interpolate('basis')
+		// 	                     .x(function(d) { return xScale(d.year); })
+		// 	                     .y(function(d) { return yScale(d.Value); });
+
+		// 	var r_lines = d3.svg.line().interpolate("basis")
+		// 						  .x(function(d) { return xScale(d.year); })
+		// 						  .y(function(d) { return yScale(d.Value); });
+			
+		// 	var nc_lines = d3.svg.line().interpolate("basis")
+		// 						  .x(function(d) { return xScale(d.year); })
+		// 						  .y(function(d) { return yScale(d.Value); });								  
+
+
+		// 	// Create the SVG container and set the origin.
+		// 	var svg = d3.select("div.total").append("svg")
+		// 	    .attr("width", width + margin.left + margin.right)
+		// 	    .attr("height", height + margin.top + margin.bottom);
+
+
+		//     svg.style({
+  //   			"display": "block",
+  //   			"margin": "auto"
+  //   		});
+
+		//     svg.append("g")
+		// 	    .attr("transform", "translate(" + margin.left + 1 + "," + margin.top + ")");
+			
+		// 	d3.json("../data/movie_counts.json", function(error, csv) {
+		// 		var data = csv;			
+		// 		color.domain(["PG-13", "R", "PG", "NC-17"]);
+
+		// 		var parseDate = d3.time.format("%Y").parse;
+				
+		// 		data.forEach(function(d, i) {
+		// 			d.year = parseDate(d.year + "");
+		// 		});
+	
+		// 		xScale.domain(d3.extent(data, function(d) { return d.year; }));
+		// 		yScale.domain([0, 200]);
+			
+		// 		var features = color.domain().map(function(mpaa) {
+		// 			    return {
+		// 			    	mpaa: mpaa,
+		// 			    	values: data.map(function(d) { 
+		// 			    		return {year: d.year, Value: d.counts};
+		// 			    	})
+		// 			    };
+		// 			});
+
+		// 		svg.append("g")
+		// 		    .attr("class", "x axis")
+		// 		    .attr("transform", "translate(" + 0 + "," + height + ")")
+		// 		    .call(xAxis);
+
+
+		// 	    svg.append("g")
+		// 		    .attr("class", "y axis")
+		// 		    .attr("transform", "translate(" + 2 * margin.left + ",0)")
+		// 		    .call(yAxis);
+				
+		// 		// Add a y-axis label.
+		// 		svg.append("text")
+		// 		    .attr("class", "y label")
+		// 		    .attr("text-anchor", "end")
+		// 		    .attr("y", margin.left + margin.right)
+		// 		    .attr("dy", ".75em")
+		// 		    .attr("transform", "rotate(-90)")
+		// 		    .text("Drivers Killed")
+		// 		    .style("font-size", "13px");
+
+		// 	    var feature = svg.selectAll(".feature")
+		//       				  .data(features)
+		//     				  .enter().append("g")
+		//       				  .attr("class", "feature");
+  
+
+		//         feature.append("path")
+		//                 .attr("class", "line")
+		//                 .attr("d", function(d) { 
+		//                 	console.log(d);
+		//                 	if(d.mpaa == "PG-13") {
+		//                 		return pg_13_lines(d.values); 
+		//                 	} else if (d.mpaa == "R") {
+		//                 		return r_lines(d.values);
+		//                 	} else if (d.mpaa == "PG") {
+		//                 		return pg_lines(d.values);
+		//                 	} else if (d.mpaa == "NC-17") {
+		//                 		return nc_lines(d.values)
+		//                 	}
+		//                 })
+		//                 .style("stroke", function(d) { return color(d.mpaa); })
+		//                 .style("fill", "white")
+	 //                	.on("mouseover", function(d) { // Add tooltip and color change on mouseover
+		// 					d3.select(this).transition().duration(100).attr("opacity", "0.5");
+		// 					// tooltip.text(d.name); 
+		// 					return tooltip.style("visibility", "visible");
+		// 				})
+		// 				.on("mousemove", function() { // Track tooltip
+		// 					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+		// 				})
+		// 				.on("mouseout", function() { // Remove tooltip on mouseout
+		// 					d3.select(this).transition().duration(100).attr("opacity", "0.8");
+		// 					return tooltip.style("visibility", "hidden");
+		// 				});
+
+		// 	    feature.append("text")
+		// 		      .datum(function(d) { return {name: d.mpaa, value: d.values[d.values.length - 1]}; })
+		// 		      .attr("transform", function(d) { 
+		//                 	if(d.mpaa == "PG-13") {
+		//                 		console.log(d.value);
+		//                 		return "translate(" + xScale(d.value.year) + "," + yScale(d.value.Value) + ")"; 
+		//                 	} else if (d.mpaa == "R") {
+		//                 		return "translate(" + xScale(d.value.year) + "," + yScale(d.value.Value) + ")";
+		//                 	} else if (d.mpaa == "PG") {
+		//                 		return "translate(" + xScale(d.value.year) + "," + yScale(d.value.Value) + ")";
+		//                 	} else if (d.mpaa == "NC-17") {
+		//                 		return "translate(" + xScale(d.value.year) + "," + yScale(d.value.Value) + ")";
+		//                 	}
+		// 		      })
+		// 		      .attr("x", 3)
+		// 		      .attr("dy", ".35em")
+		// 		      .text(function(d) { return d.mpaa; })
+		// 		      .attr("font-size", 25);
+		// 	});
+		// };
+		// draw_line_plot();
 
 	</script>
 <div class="row">
@@ -578,22 +734,13 @@
             	<h1>Implemented Functionality</h1>
             	<h3>Basic Functionality</h3>
                 <ul>
-                	<li>Bubble Chart</li>
+                	<li>Tableau Dashboard</li>
                 </ul>
                 <h3>Moderate Functionality</h3>
                 	<ul>
-                		<li>Scatterplot Matrix</li>
+                		<li>Bubble Plot</li>
                 	</ul>
-                <h3>Advanced Functionality</h3>
-                	<ul>
-                		<li>Parallel Coordinates</li>
-                	</ul>
-                <p>For my first two graphics, I opted against adding grid lines because I wanted the user to be able to notice
-                	overall trends in the data and not worry about specific values. I also am a huge proponent of leaving grid lines
-                	out of a graphic.
-                </p>
-                <p>The size of circles for my bubble chart were kept from being too large, at the sacrifice of data density of the graphic, in order to reduce the amount of overlap of circles. 
-                </p>
+                <p>I wanted my dashboard to focus primarily on the differences between various ratings of movies. Specifically, I wanted the user to be able to see how the star rating, length, and budget of different mpaa ratings vary.</p>
             </div>
         </div>
     </div>
