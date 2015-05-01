@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MSAN 622 Homework 4</title>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+    .dots {
+    	stroke: #000;
+    }
+
+	.axis path,
+	.axis line {
+	    fill: none;
+	    stroke: #000;
+	    stroke-width: 3;
+	    width: 20px;
+	    shape-rendering: crispEdges;
+	}
+
+	.axis text {
+	    font-family: sans-serif;
+	    font-size: 11px;
+	}
+
+	.xaxis path,
+	.xaxis line {
+	    fill: none;
+	    stroke: none;
+	    width: 20px;
+	    shape-rendering: crispEdges;
+	}
+
+	.xaxis text {
+	    font-family: sans-serif;
+	    font-size: 13px;
+	}
+
+	.chart {
+		float: left;
+	    padding-right: 5px;
+     	padding-bottom: 5px;
+		padding-top:0;
+		padding-left:0;
+	}
+
+	svg {
+	  font-size: 14px;
+	}
+
+	.scatter.axis {
+	  shape-rendering: crispEdges;
+	}
+
+	.scatter.axis line {
+	  stroke: #ddd;
+	  stroke-width: .5px;
+	  opacity: 0;
+	}
+
+	.scatter.axis path {
+	  display: none;
+
+	}
+
+	rect.extent {
+	  fill: #000;
+	  fill-opacity: .125;
+	  stroke: #fff;
+	}
+
+	rect.frame {
+	  fill: #fff;
+	  fill-opacity: .7;
+	  stroke: #aaa;
+	}
+
+/*	circle {
+	  fill: #ccc;
+	  fill-opacity: .5;
+	}*/
+
+	.legend circle {
+	  fill-opacity: 1;
+	}
+
+	.legend text {
+	  font-size: 18px;
+	  font-style: oblique;
+	}
+
+	.cell text {
+	  pointer-events: none;
+	}
+
+	.South {
+	  fill: #2ca02c;
+	}
+
+	.West {
+	  fill: #1f77b4;
+	}
+
+	.Northeast {
+	  fill: #ff7f0e;
+	}
+
+	.North.Central {
+		fill: #d62728;
+	}
+
+/*	#circles {
+		fill: #ccc;
+		fill-opacity: .5;
+	}*/
+
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+	    <div class="container">
+
+	        <div class="navbar-header">
+
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle Navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+
+	            <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+	        </div>
+
+	    </div>
+
+	</nav>
+
+	<div class="jumbotron">
+
+	    <div class="container">
+
+	        <h1>My Information Visualization Collection</h1>
+	        <p>Homework 4: Dashboard</p>
+
+	    </div>
+
+	</div>
+
+	<div class="container">
+
+		<p style="text-align: center;">
+		    <svg id="demo" height="20" width="300"></svg>
+		</p>
+
+	</div>
+
+	<div class="total">
+
+	</div>
+<!-- CSS styles for standard search box -->
+
+	<!-- HTML for SEARCH BAR -->
+<!-- 	<div id="tfheader">
+		<form id="tfnewsearch" action="">
+		        <input type="text" class="tftextinput" name="q" size="21" maxlength="120"><input type="submit" value="search" class="tfbutton">
+		</form>
+	<div class="tfclear"></div>
+	</div> -->
+
+
+	<!-- <label><input type="checkbox"> Sort values</label> -->
+	<script type='text/javascript' src='https://public.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1004px; height: 869px;'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book2_11158&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz' width='1004' height='869' style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='site_root' value='' /><param name='name' value='Book2_11158&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book2_11158&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='showVizHome' value='no' /><param name='showTabs' value='y' /><param name='bootstrapWhenNotified' value='true' /></object></div>
+	<script type="text/javascript">
+
+	function draw_bubble_plot() {
+			var tooltip = d3.select("body")
+						    .append("div")
+						    .style({
+						    	"position": "absolute",
+						    	"z-index": "10",
+						    	"visibility": "hidden",
+						    	"font-weight": "900",
+						    	"color": "black",
+						    	"font-size": "15px"
+						    });
+			// Chart dimensions.
+			var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 39.5},
+			    width = 1000 - margin.right,
+			    height = 600 - margin.top - margin.bottom;
+
+			var xScale = d3.scale.linear().domain([0, 300]).nice().range([margin.left, width]),
+			    yScale = d3.scale.linear().domain([0, 10]).nice().range([height, margin.top]),
+			    radiusScale = d3.scale.sqrt().domain([0, 1000]).range([0, 40]),
+			    colorScale = d3.scale.category10();
+
+	        var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+			var yAxis = d3.svg.axis().scale(yScale).orient("left");
+    		
+			// Create the SVG container and set the origin.
+			var svg = d3.select("div.total").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom);
+
+
+		    svg.style({
+    			"display": "block",
+    			"margin": "auto"
+    		})
+
+		    svg.append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			
+			svg.append("g")
+			    .attr("class", "x axis")
+			    .attr("transform", "translate(0," + height + ")")
+			    .call(xAxis);
+
+		    svg.append("g")
+			    .attr("class", "y axis")
+			    .attr("transform", "translate(" + margin.left + ",0)")
+			    .call(yAxis);
+
+
+			// Add an x-axis label.
+			svg.append("text")
+			    .attr("class", "x label")
+			    .attr("text-anchor", "end")
+			    .attr("x", width)
+			    .attr("y", height - 6)
+			    .text("Per Capita Income")
+			    .style("font-size", "13px");
+
+			// Add a y-axis label.
+			svg.append("text")
+			    .attr("class", "y label")
+			    .attr("text-anchor", "end")
+			    .attr("y", 6)
+			    .attr("dy", ".75em")
+			    .attr("transform", "rotate(-90)")
+			    .text("High School Graduation Percentage")
+			    .style("font-size", "13px");
+    		// Grab data
+    		d3.json("../data/movies.json", function(error, json) {
+    			data = json;
+    			console.log(data);
+
+    			var dot = svg.append("g")
+						      .attr("class", "dots")
+						      .selectAll(".dot")
+						      .data(data.sort(function(a, b) { return b.budget - a.budget; }))
+						      .enter().append("circle")
+						      .attr("class", "dot")
+						      .style("fill", function(d) { return colorScale(d.mpaa); })
+						     .attr("cx", function(d) {
+						     	return xScale(d.length);
+						     })
+						     .attr("cy", function(d) {
+						     	return yScale(d.rating);
+						     })
+						     .attr("r", function(d) {
+						     	return radiusScale(d.length);
+						     })
+						     .attr("opacity", "0.8")
+						     .on("mouseover", function(d) { // Add tooltip and color change on mouseover
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text(d.title); 
+								return tooltip.style("visibility", "visible");
+							})
+							.on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+							})
+							.on("mouseout", function() { // Remove tooltip on mouseout
+								d3.select(this).transition().duration(100).attr("opacity", "0.8");
+								return tooltip.style("visibility", "hidden");
+							});
+			});
+    	}
+    	draw_bubble_plot();
+
+		function draw_bar_chart() {
+
+			// ** INITIALIZE/INSTANTIATE ALL VARIABLES USED IN THIS FUNCTION ** //
+
+			// Instantiate paddings, margins
+			var barPadding = 10;
+			var windw = window.innerWidth;
+			var windh = window.innerHeight;
+			var margin = {top: 20, right: 30, bottom: 30, left: 40};
+		    var w = 760 - margin.left - margin.right;
+		    var h = 400 - margin.top - margin.bottom;
+			var yAxisXMargin = margin.left + barPadding;
+			var yAxisYMargin = margin.top;
+			var xAxisXMargin = margin.left + margin.right + 0.5 * barPadding;
+			var xAxisYMargin = h + margin.bottom - barPadding;
+
+			// Instantiate x and y scales and axes
+			var yScale = d3.scale.linear()
+								 .domain([0, max_value])
+								 .nice()
+								 .range([0, h]);
+
+			var yAxisScale = d3.scale.linear()
+							         .domain([0, max_value])
+							         .nice()
+							         .range([h, 0]);
+
+			var yAxis = d3.svg.axis()
+							  .scale(yAxisScale)
+							  .orient("left")
+							  .ticks(Math.min(max_value, 10)) // Keep from y-axis containing too many ticks
+							  .tickFormat(d3.format(",.0f")); // Remove decimal points from ticks
+
+			var xScale = d3.scale.ordinal()
+							     .domain(sorted_letters)
+							     .rangeBands([0, w]);
+
+			var xAxis = d3.svg.axis()
+							  .scale(xScale)
+							  .orient("bottom");
+
+
+			// ** BEGIN GENERATING VISUALIZATIONS ** //
+
+			// Append svg object to div box
+			var query_count_bar = d3.select("div.levelC")
+									.append("svg")
+									.attr({
+										'height': h + margin.top + margin.bottom,
+										'width': w + margin.left + margin.right,
+										'display': 'block',
+										'margin': "auto"
+									})
+									.style({
+										"display": "block",
+										"margin": "auto"
+									});
+
+			// Define tooltips for mouseover
+			var tooltip = d3.select("body")
+						    .append("div")
+						    .style({
+						    	"position": "absolute",
+						    	"z-index": "10",
+						    	"visibility": "hidden",
+						    	"font-weight": "900",
+						    	"color": "black"
+						    });
+			// Generate bars
+			var bars = query_count_bar.selectAll("rect")
+				// .data(sorted) // Sort bars by frequency
+				// .data(d3.entries(counter))
+				.data(sorted_by_key)
+				.enter()
+				.append("rect")
+				.attr("class", "bar")
+				.attr("opacity", "0")
+				.attr("x", function(d, i) { // Shift bars to make space for y-axis
+					return (i * (w / (d3.entries(counter).length))) + margin.left + margin.right + barPadding;
+				})
+				// .attr("y", function(d, i) { // Shift bars to make space for x-axis
+				// 	return h - yScale(d.value) + margin.top;
+				// })
+				.attr("y", h + margin.top)
+				.attr("width", w / d3.entries(counter).length - barPadding)
+				// .attr("height", function(d, i) { // Scale values
+				// 	return (yScale(d.value));
+				// })
+				.attr("height", 0)
+				.attr("fill", function(d, i) { // Color bars based on whether or not character is a vowel
+					d3.select(this).transition().duration(2000);
+					if (vowels.indexOf(d.key) > -1) {
+						return "#66c2a5";
+					} else {
+						return "#8da0cb";
+					}
+				})
+				.on("mouseover", function(d) { // Add tooltip and color change on mouseover
+					d3.select(this).transition().duration(100).attr("opacity", "0.5");
+					// this.setAttribute('opacity', '0.5');
+					tooltip.text("Count = " + d.value); 
+					return tooltip.style("visibility", "visible");
+				})
+				.on("mousemove", function() { // Track tooltip
+					return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+				})
+				.on("mouseout", function() { // Remove tooltip on mouseout
+					d3.select(this).transition().duration(100).attr("opacity", "1");
+					// this.setAttribute('opacity', '1');
+					return tooltip.style("visibility", "hidden");
+				});
+
+
+				bars.transition()
+				    .duration(2000)
+				    .attr("opacity", "1")
+					.attr("height", function(d, i) { // Scale values
+						return (yScale(d.value));
+					})
+					.attr("y", function(d, i) { // Shift bars to make space for x-axis
+						return h - yScale(d.value) + margin.top;
+					});
+			
+			// Add legend for Vowels
+			query_count_bar.append("rect")
+						   .attr({
+						   		"x": w - 4 * margin.right,
+						   		"y": 0,
+						   		"width": margin.top * 0.8,
+						   		"height": margin.top * 0.8,
+						   		"fill": "#66c2a5"
+						   })
+						   .on("mouseover", function() { // Add tooltip and color change on mouseover
+								// this.setAttribute('opacity', '0.5');
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text("Total Vowels = " + total_vowels); 
+								return tooltip.style("visibility", "visible");
+						   })
+						   .on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
+						   })
+						   .on("mouseout", function() { // Remove tooltip on mouseout
+								// this.setAttribute('opacity', '1');
+								d3.select(this).transition().duration(100).attr("opacity", "1");
+								return tooltip.style("visibility", "hidden")
+						   });
+
+			// Add text to Vowels legend
+			query_count_bar.append("text")
+					       .attr({
+					       		"class": "legend",
+					       		"x": w - 2.5 * margin.right,
+					       		"y": margin.top - 6.5,
+					       		"font-family": "ubuntu",
+					       		"font-size": "15px",
+					       		"fill": "#66c2a5",
+					       		"text-anchor": "middle"
+					       })
+						   .text("Vowels");
+
+			// Add legend for Consonants
+			query_count_bar.append("rect")
+						   .attr({
+						   		"class": "legend",
+						   		"x": w - margin.left,
+						   		"y": 0,
+						   		"width": margin.top * 0.8,
+						   		"height": margin.top * 0.8,
+						   		"fill": "#8da0cb"
+						   })
+						   .on("mouseover", function() { // Add tooltip and color change on mouseover
+								// this.setAttribute('opacity', '0.5');
+								d3.select(this).transition().duration(100).attr("opacity", "0.5");
+								tooltip.text("Total Consonants = " + total_consonants); 
+								return tooltip.style("visibility", "visible");
+						   })
+						   .on("mousemove", function() { // Track tooltip
+								return tooltip.style("top", (event.pageY+10)+"px").style("left",(event.pageX+10)+"px");
+						   })
+						   .on("mouseout", function() { // Remove tooltip on mouseout
+								// this.setAttribute('opacity', '1');
+								d3.select(this).transition().duration(100).attr("opacity", "1");
+								return tooltip.style("visibility", "hidden")
+						   });
+
+			// Add text to Consonants legend
+			query_count_bar.append("text")
+						   .attr({
+						   		"x": w + 0.6 * margin.right,
+						   		"y": margin.top - 6.5,
+						   		"font-family": "ubuntu",
+						   		"font-size": "15px",
+						   		"fill": "#8da0cb",
+						   		"text-anchor": "middle"
+						   })
+						   .text("Consonants");
+
+			// Add y-axis
+			var add_y_axis = query_count_bar.append("g")
+						   .attr({
+						   		"opacity": "0",
+						   		"class": "axis",
+						   		"transform": "rotate(90)",
+						   		"transform": "translate("+ yAxisXMargin + "," + yAxisYMargin + ")"
+						   })
+						   .call(yAxis)
+						   .append("text")
+						   .attr({
+						   		"transform": "rotate(-90)",
+						   		"y": 6,
+						   		"dy": ".71em"
+						   })
+						   .style("text-anchor", "end")
+						   .text("Count");
+			// Add x-axis
+			query_count_bar.append("g")
+						   .attr({
+						   		"opacity": "0",
+						   		"class": "xaxis",
+						   		"transform": "translate(" + xAxisXMargin + "," + xAxisYMargin + ")"
+						   })
+						   .transition().duration(2000)
+						   .attr("opacity", "1")
+				           .call(xAxis);
+
+            query_count_bar.selectAll("g.axis").transition().delay(300).duration(2000).attr("opacity", "1");
+
+            d3.select("input").on("change", change);
+
+		    var sortTimeout = setTimeout(function() {
+		    	d3.select("input").property("checked", true).each(change);
+		    }, 2000);
+
+		    function change() {
+			    clearTimeout(sortTimeout);
+
+			    // Copy-on-write since tweens are evaluated after a delay.
+			    var x0 = xScale.domain(d3.entries(counter).sort(this.checked
+			        ? function(a, b) { return b.value - a.value; }
+			        : function(a, b) { return d3.ascending(a.key, b.key); })
+			        .map(function(d) { return d.key; }))
+			        .copy();
+
+			    query_count_bar.selectAll(".bar")
+			        .sort(function(a, b) { return x0(a.key) - x0(b.key); });
+
+			    var transition = query_count_bar.transition().duration(750),
+			        delay = function(d, i) { return i * 50; };
+
+			    transition.selectAll(".bar")
+			        .delay(delay)
+			        .attr("x", function(d) { return x0(d.key) + margin.left + margin.right + barPadding; });
+
+			    transition.select(".xaxis")
+			        .call(xAxis)
+			        .selectAll("g")
+			        .delay(delay);
+			  }
+		}
+
+
+	</script>
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>
+
+            <div class="media-body">
+            	<h1>Implemented Functionality</h1>
+            	<h3>Basic Functionality</h3>
+                <ul>
+                	<li>Bubble Chart</li>
+                </ul>
+                <h3>Moderate Functionality</h3>
+                	<ul>
+                		<li>Scatterplot Matrix</li>
+                	</ul>
+                <h3>Advanced Functionality</h3>
+                	<ul>
+                		<li>Parallel Coordinates</li>
+                	</ul>
+                <p>For my first two graphics, I opted against adding grid lines because I wanted the user to be able to notice
+                	overall trends in the data and not worry about specific values. I also am a huge proponent of leaving grid lines
+                	out of a graphic.
+                </p>
+                <p>The size of circles for my bubble chart were kept from being too large, at the sacrifice of data density of the graphic, in order to reduce the amount of overlap of circles. 
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework2.html" target="_blank">homework 2</a></td>
+                </tr>
+
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	<hr/>
+	<footer>
+	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
+</body>
+
+</html>
