@@ -150,17 +150,6 @@ function symbolMap() {
             .attr("d", path)
             .classed({"country": true});
 
-        // draw states (invisible for now)
-        // may need to adjust to draw countries instead?
-        // states.selectAll("path")
-        //     .data(topojson.feature(map, map.objects.states).features)
-        //     .enter()
-        //     .append("path")
-        //     .attr("d", path)
-        //     // set the ID so we can select it later
-        //     .attr("id", function(d) { return "state" + d.id; })
-        //     .classed({"state": true});
-
         // draw symbols
         symbols.selectAll("circle")
             .data(values)
