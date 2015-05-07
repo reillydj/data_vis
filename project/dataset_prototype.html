@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MSAN 622 Project Prototype</title>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+
+    .Text {
+        font-size: 25px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      /*display: none;*/
+      stroke-width: 1px;
+    }
+
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+	    <div class="container">
+
+	        <div class="navbar-header">
+
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle Navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+
+	            <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+	        </div>
+
+	    </div>
+
+	</nav>
+
+	<div class="jumbotron">
+
+	    <div class="container">
+
+	        <h1>My Information Visualization Collection</h1>
+	        <p>Project Dataset Prototype</p>
+
+	    </div>
+
+	</div>
+
+	<div class="container">
+
+		<p style="text-align: center;">
+		    <svg id="demo" height="20" width="300"></svg>
+		</p>
+
+	</div>
+<div class="container">
+<div class="row">
+    <div class="col-md-10">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>       	
+        </div>
+    </div>
+    </div>
+</div>
+<div class="container">
+    <h1>Dataset Summary</h1>
+        <p class="Text">The dataset I am using in this project is the Heart Disease Data Set. I obtained this dataset from the UCI machine learning dataset repository. Thus, it was originally framed as a four-way classification dataset with the target variable being the type of diagnosis of heart disease in a patient.  It contains categorical, integer, and real-valued variables. There are 302 observations and 14 features with no missing values. For more information on this dataset, please see <a href="dataset.html" target="_blank">my dataset write-up</a>.</p>
+    <h1>Sketch Summary</h1>
+        <p class="Text">My sketch includes a simple, non-interactive version of my proposed bubble plot and parallel coordinates visualization. For the purposes of this sketch, both are included on this page. However, in my final implementation, I will have individual links to each separate visualization, since I hope to make each visualization large, self-contained, and easy to navigate. For more information on my proposed project sketch, please see <a href="dataset_sketch.html" target="_blank">my dataset sketch</a>.</p>
+</div>
+<div class="container">
+    <div class="bubble">
+        <script>
+            function draw_bubble_plot() {
+                        var tooltip = d3.select("div.bubble")
+                                        .append("div")
+                                        .style({
+                                            "position": "absolute",
+                                            "z-index": "10",
+                                            "visibility": "hidden",
+                                            "font-weight": "900",
+                                            "color": "black",
+                                            "font-size": "15px"
+                                        });
+                        // Chart dimensions.
+                        var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 50},
+                            width = 1000 - margin.right,
+                            height = 600 - margin.top - margin.bottom;
+
+                        var xScale = d3.scale.linear().domain([25, 80]).nice().range([margin.left, width]),
+                            yScale = d3.scale.linear().domain([70, 205]).nice().range([height, margin.top]),
+                            radiusScale = d3.scale.sqrt().domain([120, 580]).range([0, 40]),
+                            colorScale = d3.scale.category10();
+
+                        var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+                        var yAxis = d3.svg.axis().scale(yScale).orient("left");
+                        
+                        // Create the SVG container and set the origin.
+                        var svg = d3.select("div.bubble").append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom);
+
+
+                        svg.style({
+                            "display": "block",
+                            "margin": "auto"
+                        })
+
+                        svg.append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis);
+
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .attr("transform", "translate(" + margin.left + ",0)")
+                            .call(yAxis);
+
+
+                        // Add an x-axis label.
+                        svg.append("text")
+                            .attr("class", "x label")
+                            .attr("text-anchor", "end")
+                            .attr("x", width)
+                            .attr("y", height - 6)
+                            .text("Age")
+                            .style("font-size", "13px");
+
+                        // Add a y-axis label.
+                        svg.append("text")
+                            .attr("class", "y label")
+                            .attr("text-anchor", "end")
+                            .attr("y", 2)
+                            .attr("dy", ".75em")
+                            .attr("transform", "rotate(-90)")
+                            .text("Maximum Heart Rate")
+                            .style("font-size", "13px");
+                        // Grab data
+                        d3.csv("../data/heart_disease.csv", function(error, json) {
+                            data = json;
+                            console.log(data);
+
+                            var dot = svg.append("g")
+                                          .attr("class", "dots")
+                                          .selectAll(".dot")
+                                          .data(data.sort(function(a, b) { return b.cholestoral - a.cholestoral; }))
+                                          .enter().append("circle")
+                                          .attr("class", function(d) {
+                                            if (d.sex == 1) {
+                                                return "dotboy";
+                                            } else {
+                                                return "dotgirl";
+                                            }
+                                          })
+                                          .style("fill", function(d) { return colorScale(d.sex); })
+                                         .attr("cx", function(d) {
+                                            return xScale(d.age);
+                                         })
+                                         .attr("cy", function(d) {
+                                            return yScale(d.max_heart_rate);
+                                         })
+                                         .attr("r", function(d) {
+                                            return radiusScale(d.cholestoral);
+                                         })
+                                         .attr("opacity", "0.8");
+                            dot.on("mouseover", function(d) { 
+                                    var classes = d3.select(this).attr("class");
+                                    if (classes == "dotboy") {
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.2");
+                                        tooltip.text("Cholestoral = " + d.cholestoral);
+                                        return tooltip.style("visibility", "visible");
+                                    } else {
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.2");
+                                        tooltip.text("Cholestoral = " + d.cholestoral);
+                                        return tooltip.style("visibility", "visible");
+                                    }  
+                                })
+                                .on("mousemove", function() { // Track tooltip
+                                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+                                })
+                                .on("mouseout", function(d) { // Remove tooltip on mouseout
+                                    var classes = d3.select(this).attr("class");
+                                    if (classes.indexOf("boy") > -1) {
+                                        console.log(classes);
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
+                                        tooltip.text("Cholestoral = " + d.cholestoral);
+                                        return tooltip.style("visibility", "hidden");
+                                    } else {
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
+                                        tooltip.text("Cholestoral = " + d.cholestoral);
+                                        return tooltip.style("visibility", "hidden");
+                                    }
+                                    // d3.select(this).transition().duration(100).attr("opacity", "0.8");
+                                    // return tooltip.style("visibility", "hidden");
+                                })
+                        });
+                    }
+                    draw_bubble_plot(); 
+                    </script>
+                </div>
+            </div>
+<div class="container" id="parallel">
+        <script>
+
+        var levelA = d3.select("#parallel")
+                        .append("div")
+                        .attr({
+                            "class": "parcoords",
+                            "id": "parallelbox",
+                        })
+                        .style({
+                            "height": "600px",
+                            "width": "1000px"
+                        });
+
+            var colorScale = d3.scale.category10();
+                
+                function draw_parallel_coordinates() {
+
+                    d3.csv("../data/heart_disease.csv", function(error, csv) {
+                        var data = csv;
+                        var dimensions = ["sex", "blood_pressure", "age", "cholestoral", "max_heart_rate", "chest_pain"];
+
+                        colorScale = d3.scale.category10();
+                        var pc = d3.parcoords()("#parallelbox")      
+                          .height(600)
+                          .width(1200)    
+                          .data(data)   
+                          .bundlingStrength(0.5)
+                          .hideAxis([""])
+                          .color(function(d) { return colorScale(d.sex); })
+                          .ticks(5)
+                          .composite("destination-over")   
+                          .alpha(0.6)   
+                          .dimensions(dimensions)   
+                          .margin({ top: 24, left: 150, bottom: 12, right: 0 })                  
+                          .render()               
+                          .createAxes()
+                          .brushMode("1D-axes");
+                        });
+                }
+                draw_parallel_coordinates();
+        </script>
+</div>
+<div class="container">
+    <div class="col-md-2">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/data/heart_disease.csv" target="_blank">The Data</a></td>
+                </tr>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/dataset_prototype.csv" target="_blank">The Code</a></td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	<hr/>
+	<footer>
+	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
+</body>
+
+</html>

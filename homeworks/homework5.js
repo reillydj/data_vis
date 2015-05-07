@@ -45,6 +45,11 @@ function symbolMap() {
 
     var radius = d3.scale.sqrt().range([5, 15]);
 
+    var color = d3.scale.linear()
+                  .domain([0, 200])
+                  .range(["#fde0dd", "#c51b8a"])
+                  .interpolate(d3.interpolateLab);
+
     var log = d3.select("#log");
 
     var map = null; // map data
@@ -99,21 +104,28 @@ function symbolMap() {
         });
         // set path generator based on projection
         var path = d3.geo.path().projection(projection);
+        
         function update() {
             var svg = d3.select("svg")
             svg.selectAll("path").attr("d", path);
             svg.selectAll("circle")
-                .attr("cx", function(d) {
-                    console.log(d);
-                    var longitude = d.geometry.coordinates[0];
-                    var latitude = d.geometry.coordinates[1];
-                    return projection([longitude, latitude])[0];
-                })
-                .attr("cy", function(d) {
-                    var longitude = d.geometry.coordinates[0];
-                    var latitude = d.geometry.coordinates[1];
-                    return projection([longitude, latitude])[1];
-                });
+            .attr("r", function(d, i) {
+                return radius(value(d));
+            })
+            .attr("cx", function(d, i) {
+                // projection takes [longitude, latitude]
+                // and returns [x, y] as output
+                return projection([d.longitude, d.latitude])[0];
+            })
+            .attr("cy", function(d, i) {
+                return projection([d.longitude, d.latitude])[1];
+            })
+            .style("fill", function(d) {
+                return color(d.depth);
+            })
+            .classed({"symbol": true})
+            .on("mouseover", showHighlight)
+            .on("mouseout", hideHighlight);
         }
         // update radius domain
         // uses our value function to get the right property
@@ -164,6 +176,9 @@ function symbolMap() {
             })
             .attr("cy", function(d, i) {
                 return projection([d.longitude, d.latitude])[1];
+            })
+            .style("fill", function(d) {
+                return color(d.depth);
             })
             .classed({"symbol": true})
             .on("mouseover", showHighlight)

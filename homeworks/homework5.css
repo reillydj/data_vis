@@ -40,10 +40,11 @@ svg {
  */
 
 .symbol {
-    fill: royalblue;
-    fill-opacity: 0.25;
+    /*fill: royalblue;*/
+    fill: none;
+    fill-opacity: 0.45;
 
-    stroke: royalblue;
+    stroke: #c51b8a;
     stroke-width: 1px;
     stroke-opacity: 1.0;
 }

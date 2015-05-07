@@ -2,8 +2,16 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Symbol Map Demo</title>
-
+    <title>MSAN 622 Homework 5</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="../css/d3.parcoords.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/d3.v3.js"></script>
+    <script type="text/javascript" src="../js/d3.min.js"></script>
+    <script type="text/javascript" src="../js/d3.parcoords.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap-theme.min.css" rel="stylesheet">
     <!-- load D3 and TopoJSON //-->
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
@@ -13,14 +21,68 @@
     <link rel="stylesheet" href="homework5.css">
     <script src="homework5.js"></script>
 
+    <style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+    </style>
  </head>
 
 <body>
 
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+
+        <div class="container">
+
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <div class="jumbotron">
+
+        <div class="container">
+
+            <h1>My Information Visualization Collection</h1>
+            <p>Homework 5: Interactive Earthquake Visualization</p>
+
+        </div>
+
+    </div>
+
+<!--     <div class="container">
+
+        <p style="text-align: center;">
+            <svg id="demo" height="20" width="300"></svg>
+        </p>
+
+    </div> -->
+<!-- 
+    <div class="total">
+
+</div> -->
+
+<div class="container">
 <div id="block">
 <svg id="map" width="940" height="480"></svg>
 <p id="log">Loading map... please wait.</p>
 </div>
+
+
 
 <script>
 /*
@@ -59,6 +121,66 @@ d3.json(url.country, function(mapError, mapJSON) {
 
 
 </script>
+</div>
+<div class="container">
+<div class="row">
+    <div class="col-md-8">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
 
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>
+
+            <div class="media-body">
+                <h1>Implemented Functionality</h1>
+                <h3>Basic Functionality</h3>
+                <ul>
+                    <li>Tableau Dashboard</li>
+                </ul>
+                <h3>Moderate Functionality</h3>
+                    <ul>
+                        <li>Bubble Plot</li>
+                    </ul>
+                <p>I wanted my dashboard to focus primarily on the differences between various ratings of movies. Specifically, I wanted the user to be able to see how the star rating, length, and budget of different mpaa ratings vary. This is why I went with a bubble plot of length versus rating, a line graph showing the total number of movies in each mpaa category across time, and a simple bar chart showing the average budget of each mpaa category.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/homeworks/homework4.html" target="_blank">homework 4</a></td>
+                </tr>
+
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+    <hr/>
+    <footer>
+        <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+    </footer>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+<!--    // <script src="../js/d3.min.js"></script>
+    // <script src="../js/d3.v3.js"></script> -->
 </body>
 </html>
