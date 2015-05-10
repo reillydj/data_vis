@@ -108,6 +108,10 @@
 <div class="container">
     <div class="bubble">
         <script>
+
+        // ***********************************
+        // TRY JUST OUTLINES ON BUBBLE PLOTS
+        // ***********************************
             function draw_bubble_plot() {
                         var tooltip = d3.select("div.bubble")
                                         .append("div")
@@ -193,7 +197,11 @@
                                                 return "dotgirl";
                                             }
                                           })
-                                          .style("fill", function(d) { return colorScale(d.sex); })
+                                          .style("stroke", function(d) { return colorScale(d.sex); })
+                                          .style("stroke-width", "2px")
+                                          // .style("fill", function(d) { return colorScale(d.sex); })
+                                          .style("fill", "white")
+                                          .style("fill-opacity", 0)
                                          .attr("cx", function(d) {
                                             return xScale(d.age);
                                          })
