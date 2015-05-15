@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MSAN 622 Project Bubble Chart</title>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+
+    .Text {
+        font-size: 25px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      /*display: none;*/
+      stroke-width: 1px;
+    }
+    .d3-tip {
+      line-height: 1;
+      font-weight: bold;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 2px;
+    }
+    .d3-tip:after {
+      box-sizing: border-box;
+      display: inline;
+      font-size: 10px;
+      width: 100%;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.8);
+      content: "\25BC";
+      position: absolute;
+      text-align: center;
+    }
+    .d3-tip.n:after {
+      margin: -1px 0 0 0;
+      top: 100%;
+      left: 0;
+    }
+
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+	    <div class="container">
+
+	        <div class="navbar-header">
+
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle Navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+
+	            <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+	        </div>
+
+	    </div>
+
+	</nav>
+
+	<div class="jumbotron">
+
+	    <div class="container">
+
+	        <h1>My Information Visualization Collection</h1>
+	        <p>Project Bubble Chart</p>
+
+	    </div>
+
+	</div>
+
+	<div class="container">
+
+		<p style="text-align: center;">
+		    <svg id="demo" height="20" width="300"></svg>
+		</p>
+
+	</div>
+<div class="container">
+<div class="row">
+    <div class="col-md-10">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>       	
+        </div>
+    </div>
+    </div>
+</div>
+<div class="container">
+    <h1>SUmMARY</h1>
+</div>
+<div class="container">
+    <div class="bubble">
+        <script>
+
+        // ***********************************
+        // TRY JUST OUTLINES ON BUBBLE PLOTS
+        // ***********************************
+            function draw_bubble_plot() {
+                        // var tooltip = d3.select("div.bubble")
+                        //                 .append("div")
+                        //                 .style({
+                        //                     "position": "absolute",
+                        //                     "z-index": "10",
+                        //                     "visibility": "hidden",
+                        //                     "font-weight": "900",
+                        //                     "color": "black",
+                        //                     "font-size": "15px"
+                        //                 });
+                        var tip = d3.tip()
+                                  .attr('class', 'd3-tip')
+                                  .offset([-10, 0])
+                                  .html(function(d) {
+                                    if (d.sex == 1) {
+                                        return "<strong>Gender:</strong> <span style='color:#3d93c2'>Male</span> <br>" +
+                                               "<strong>Age:</strong> <span style='color:#3d93c2'>" + d.age + "</span> <br>" +
+                                               "<strong>Cholestoral:</strong> <span style='color:#3d93c2'>" + d.cholestoral + "</span>";
+                                    } else {
+                                        return "<strong>Gender:</strong> <span style='color:#f50e0a'>Female</span> <br>" +
+                                               "<strong>Age:</strong> <span style='color:#f50e0a'>" + d.age + "</span> <br>" +
+                                               "<strong>Cholestoral:</strong> <span style='color:#f50e0a'>" + d.cholestoral + "</span>";                                        
+                                    }
+                                  });
+
+                        var aggregate_male_tip = d3.tip()
+                                                .attr('class', 'd3-tip')
+                                                .offset([-10, 0])
+                                                .html(function(d) {
+                                                return "<span style='font-size:20px:'><u><strong>Male Summary Statistics:</strong></u></span> <br> <br>" +
+                                                       "<strong>Average Age:</strong> <span style='color:#3d93c2'>" + 54 + "</span> <br>" +
+                                                       "<strong>Average Blood Pressure:</strong> <span style='color:#3d93c2'>" + 131 + "</span> <br>" +
+                                                       "<strong>Average Maximum Heart Rate:</strong> <span style='color:#3d93c2'>" + 149 + "</span> <br>"
+
+                                                });
+                        var aggregate_female_tip = d3.tip()
+                                                .attr('class', 'd3-tip')
+                                                .offset([-10, 0])
+                                                .html(function(d) {
+                                                return "<span style='font-size:20px:'><u><strong>Female Summary Statistics:</strong></u></span> <br> <br>" +
+                                                       "<strong>Average Age:</strong> <span style='color:#f50e0a'>" + 56 + "</span> <br>" +
+                                                       "<strong>Average Blood Pressure:</strong> <span style='color:#f50e0a'>" + 133 + "</span> <br>" +
+                                                       "<strong>Average Maximum Heart Rate:</strong> <span style='color:#f50e0a'>" + 151 + "</span> <br>"
+
+                                                });                                             
+                        // Chart dimensions.
+                        var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 50},
+                            width = 1000 - margin.right,
+                            height = 600 - margin.top - margin.bottom;
+
+                        var xScale = d3.scale.linear().domain([25, 80]).nice().range([margin.left, width]),
+                            yScale = d3.scale.linear().domain([70, 205]).nice().range([height, margin.top]),
+                            radiusScale = d3.scale.sqrt().domain([120, 580]).range([0, 40]),
+                            colorScale = d3.scale.category10();
+
+                        var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+                        var yAxis = d3.svg.axis().scale(yScale).orient("left");
+                        
+                        // Create the SVG container and set the origin.
+                        var svg = d3.select("div.bubble").append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom);
+
+                        svg.call(tip);
+                        svg.call(aggregate_male_tip);
+                        svg.call(aggregate_female_tip);
+
+                        svg.style({
+                            "display": "block",
+                            "margin": "auto"
+                        })
+
+                        svg.append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis);
+
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .attr("transform", "translate(" + margin.left + ",0)")
+                            .call(yAxis);
+
+
+                        // Add an x-axis label.
+                        svg.append("text")
+                            .attr("class", "x label")
+                            .attr("text-anchor", "end")
+                            .attr("x", width)
+                            .attr("y", height - 6)
+                            .text("Age")
+                            .style("font-size", "13px");
+
+                        // Add a y-axis label.
+                        svg.append("text")
+                            .attr("class", "y label")
+                            .attr("text-anchor", "end")
+                            .attr("y", 2)
+                            .attr("dy", ".75em")
+                            .attr("transform", "rotate(-90)")
+                            .text("Maximum Heart Rate")
+                            .style("font-size", "13px");
+                        // Grab data
+                        d3.csv("../data/heart_disease.csv", function(error, json) {
+                            data = json;
+                            console.log(data);
+
+                            var dot = svg.append("g")
+                                          .attr("class", "dots")
+                                          .selectAll(".dot")
+                                          .data(data.sort(function(a, b) { return b.cholestoral - a.cholestoral; }))
+                                          .enter().append("circle")
+                                          .attr("class", function(d) {
+                                            if (d.sex == 1) {
+                                                return "dotboy";
+                                            } else {
+                                                return "dotgirl";
+                                            }
+                                          })
+                                          // .style("stroke", function(d) { return colorScale(d.sex); })
+                                          .style("stroke", "black")
+                                          .style("fill", function(d) {
+                                            if (d.sex == 1) {
+                                                return "#a6cee3";
+                                            } else {
+                                                return "#fb9a99";
+                                            }
+                                          })
+                                          .style("stroke-width", "1px")
+                                          // .style("fill", function(d) { return colorScale(d.sex); })
+                                          // .style("fill", "white")
+                                          .style("fill-opacity", 0.8)
+                                         .attr("cx", function(d) {
+                                            return xScale(d.age);
+                                         })
+                                         .attr("cy", function(d) {
+                                            return yScale(d.max_heart_rate);
+                                         })
+                                         .attr("r", function(d) {
+                                            return radiusScale(d.cholestoral);
+                                         })
+                                         .attr("opacity", "0.8");
+                            dot.on("mouseover", function(d) { 
+                                    var classes = d3.select(this).attr("class");
+                                    if (classes == "dotboy") {
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.2");
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "1");
+                                        d3.selectAll(".dotboy").transition().duration(100).style("fill", "#3d93c2");
+                                        d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#3d93c2");
+                                        d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#3d93c2");
+                                        tip.show(d);
+                                        // tooltip.text("Cholestoral = " + d.cholestoral);
+                                        // return tooltip.style("visibility", "visible");
+                                    } else {
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.2");
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "1");
+                                        d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#f50e0a");
+                                        d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#f50e0a");
+                                        d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#f50e0a");
+                                        tip.show(d);
+                                        // tooltip.text("Cholestoral = " + d.cholestoral);
+                                        // return tooltip.style("visibility", "visible");
+                                    }  
+                                })
+                                .on("mousemove", function() { // Track tooltip
+                                    // return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+                                })
+                                .on("mouseout", function(d) { // Remove tooltip on mouseout
+                                    var classes = d3.select(this).attr("class");
+                                    if (classes.indexOf("boy") > -1) { 
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
+                                        d3.selectAll(".dotboy").transition().duration(100).style("fill", "#a6cee3");
+                                        d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#a6cee3");
+                                        d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#a6cee3");
+                                        tip.hide();
+                                        // tooltip.text("Cholestoral = " + d.cholestoral);
+                                        // return tooltip.style("visibility", "hidden");
+                                    } else {
+                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
+                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
+                                        d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#fb9a99");
+                                        d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#fb9a99");
+                                        d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#fb9a99");
+                                        tip.hide();
+                                        // tooltip.text("Cholestoral = " + d.cholestoral);
+                                        // return tooltip.style("visibility", "hidden");
+                                    }
+                                    // d3.select(this).transition().duration(100).attr("opacity", "0.8");
+                                    // return tooltip.style("visibility", "hidden");
+                                })
+                        });
+                        svg.append("text")
+                           .attr({
+                                "id": "maleLegendText",
+                                "x": width - margin.right - margin.left - 10,
+                                "y": margin.top + margin.bottom,
+                                "font-family": "ubuntu",
+                                "font-size": "20px",
+                                // "fill": colorScale("South"),
+                                "fill": "#a6cee3",
+                                "text-anchor": "middle"
+                           })
+                           .style("font-weight", "bold")
+                           .text("Male")
+
+                        svg.append("text")
+                           .attr({
+                                "id":"femaleLegendText",
+                                "x": width - margin.right - margin.left,
+                                "y": 2 * (margin.top + margin.bottom),
+                                "font-family": "ubuntu",
+                                "font-size": "20px",
+                                // "fill": colorScale("South"),
+                                "fill": "#fb9a99",
+                                "text-anchor": "middle"
+                           })
+                           .style("font-weight", "bold")
+                           .text("Female")
+
+                        svg.append("circle")
+                           .attr({
+                                "id": "maleLegend",
+                                "cx": width - margin.right - margin.left - 4 * radiusScale(240),
+                                "cy": margin.top + margin.bottom - 0.5 * radiusScale(240),
+                                "r": radiusScale(240),
+                                "stroke": "black",
+                                "fill": "#a6cee3",
+                                "opacity": "0.8"
+                           })
+                           .on("mouseover", function() {
+                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.2");
+                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "1");
+                                d3.selectAll(".dotboy").transition().duration(100).style("fill", "#3d93c2");
+                                d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#3d93c2");
+                                d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#3d93c2");
+                                aggregate_male_tip.show();
+                            })
+                           .on("mouseout", function() {
+                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
+                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
+                                d3.selectAll(".dotboy").transition().duration(100).style("fill", "#a6cee3");
+                                d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#a6cee3");     
+                                d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#a6cee3");
+                                aggregate_male_tip.hide();                       
+                           })
+
+                        svg.append("circle")
+                           .attr({
+                                "id": "femaleLegend",
+                                "cx": width - margin.right - margin.left - 4 * radiusScale(240),
+                                "cy": 2 * (margin.top + margin.bottom) - 0.5 * radiusScale(240),
+                                "r": radiusScale(240),
+                                "stroke": "black",
+                                "fill": "#fb9a99",
+                                "opacity": "0.8"
+                           })
+                           .on("mouseover", function() {
+                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.2");
+                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "1");
+                                d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#f50e0a");
+                                d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#f50e0a");
+                                d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#f50e0a");
+                                aggregate_female_tip.show();
+                            })
+                           .on("mouseout", function() {
+                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
+                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
+                                d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#fb9a99");
+                                d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#fb9a99");  
+                                d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#fb9a99");
+                                aggregate_female_tip.hide();                       
+                           })                           
+                    }
+                    draw_bubble_plot(); 
+                    </script>
+                </div>
+            </div>
+<div class="container">
+    <div class="col-md-2">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/data/heart_disease.csv" target="_blank">The Data</a></td>
+                </tr>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/project_bubble_chart.html" target="_blank">The Code</a></td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	<hr/>
+	<footer>
+	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
+</body>
+
+</html>

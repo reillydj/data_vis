@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MSAN 622 Project Prototype</title>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="../css/d3.parcoords.css" rel="stylesheet">
+	<script type="text/javascript" src="../js/d3.v3.js"></script>
+	<script type="text/javascript" src="../js/d3.min.js"></script>
+	<script type="text/javascript" src="../js/d3.parcoords.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    
+    body {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+
+    .Text {
+        font-size: 25px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      /*display: none;*/
+      stroke-width: 1px;
+    }
+
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+	    <div class="container">
+
+	        <div class="navbar-header">
+
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle Navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+
+	            <a class="navbar-brand" href="../index.html">MSN 622</a>
+
+	        </div>
+
+	    </div>
+
+	</nav>
+
+	<div class="jumbotron">
+
+	    <div class="container">
+
+	        <h1>My Information Visualization Collection</h1>
+	        <p>Project Dataset Prototype</p>
+
+	    </div>
+
+	</div>
+
+	<div class="container">
+
+		<p style="text-align: center;">
+		    <svg id="demo" height="20" width="300"></svg>
+		</p>
+
+	</div>
+<div class="container">
+<div class="row">
+    <div class="col-md-10">
+        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                </a>
+            </div>       	
+        </div>
+    </div>
+    </div>
+</div>
+<div class="container">
+    <h1>Dataset Summary</h1>
+        <p class="Text">The dataset I am using in this project is the Heart Disease Data Set. I obtained this dataset from the UCI machine learning dataset repository. Thus, it was originally framed as a four-way classification dataset with the target variable being the type of diagnosis of heart disease in a patient.  It contains categorical, integer, and real-valued variables. There are 302 observations and 14 features with no missing values. For more information on this dataset, please see <a href="dataset.html" target="_blank">my dataset write-up</a>.</p>
+    <h1>Sketch Summary</h1>
+        <p class="Text">My sketch includes a simple, non-interactive version of my proposed bubble plot and parallel coordinates visualization. For the purposes of this sketch, both are included on this page. However, in my final implementation, I will have individual links to each separate visualization, since I hope to make each visualization large, self-contained, and easy to navigate. For more information on my proposed project sketch, please see <a href="dataset_sketch.html" target="_blank">my dataset sketch</a>.</p>
+</div>
+<div class="container">
+    <div class="bubble">
+        <a href="project_bubble_chart.html" target="_blank">Bubble Chart</a>
+    </div>
+</div>
+<div class="container" id="parallel">
+    <a href="project_parallel_coords.html" target="_blank">Parallel Coordinates</a>
+</div>
+<div class="container">
+    <div class="col-md-2">
+        <h2 class="page-header"><a name="contact"></a>Code</h2>
+
+        <table class="table table-bordered" style="width: auto;">
+            <thead>
+                <tr>
+                    <th colspan="2">David Reilly</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/data/heart_disease.csv" target="_blank">The Data</a></td>
+                </tr>
+                <tr>
+                    <th>Github:</th>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/dataset_prototype.csv" target="_blank">The Code</a></td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td><a href="reillydj116@gmail.com">reillydj116@gmail.com</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	<hr/>
+	<footer>
+	    <p style="text-align: center;">David Reilly &bullet; MSAN 622 Information Visualization &bullet; Spring 2015</p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+<!-- 	// <script src="../js/d3.min.js"></script>
+	// <script src="../js/d3.v3.js"></script> -->
+</body>
+
+</html>
