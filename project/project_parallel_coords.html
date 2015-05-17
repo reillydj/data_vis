@@ -137,11 +137,9 @@
                             "id": "parallelbox",
                         })
                         .style({
-                            "height": "600px",
+                            "height": "400px",
                             "width": "1000px"
                         });
-
-            var colorScale = d3.scale.category10();
                 
                 function draw_parallel_coordinates() {
 
@@ -151,7 +149,7 @@
 
                         colorScale = d3.scale.category10();
                         var pc = d3.parcoords()("#parallelbox")      
-                          .height(600)
+                          .height(400)
                           .width(1200)    
                           .data(data)   
                           .bundlingStrength(0.5)
@@ -168,6 +166,19 @@
                           .createAxes()
                           .brushMode("1D-axes");
                         });
+
+                    d3.select("#parallelbox")
+                      .append("text")
+                       .attr({
+                            // "id":"femaleLegendText",
+                            "x": 100,
+                            "y": 100,
+                            "text-anchor": "middle"
+                       })
+                       .style("font-weight", "bold")
+                       .style("font-size", "30px")
+                       .style("color", "#a6cee3")
+                       .text("Male")
                 }
                 draw_parallel_coordinates();
         </script>
@@ -183,7 +194,7 @@
                             "id": "femaleparallelbox",
                         })
                         .style({
-                            "height": "600px",
+                            "height": "400px",
                             "width": "1000px"
                         });
 
@@ -197,7 +208,7 @@
 
                         colorScale = d3.scale.category10();
                         var pc = d3.parcoords()("#femaleparallelbox")      
-                          .height(600)
+                          .height(400)
                           .width(1200)    
                           .data(data)   
                           .bundlingStrength(0.5)
@@ -208,12 +219,29 @@
                           .alpha(1)   
                           .color("#fb9a99")
                           .dimensions(dimensions)   
-                          .margin({ top: 24, left: 0, bottom: 12, right: 0 })      
+                          .margin({ top: 24, left: -33, bottom: 12, right: 33 })      
                           .reorderable()        
                           .render()               
                           .createAxes()
                           .brushMode("1D-axes");
                         });
+
+                    d3.select("#femaleparallelbox")
+                      .append("text")
+                       .attr({
+                            // "id":"femaleLegendText",
+                            "x": 100,
+                            "y": 100,
+                            "font-family": "ubuntu",
+                            "font-size": "30px",
+                            // "fill": colorScale("South"),
+                            "fill": "#fb9a99",
+                            "text-anchor": "middle"
+                       })
+                       .style("font-weight", "bold")
+                       .style("font-size", "30px")
+                       .style("color", "#fb9a99")
+                       .text("Female")
                 }
                 draw_parallel_coordinates();
         </script>
@@ -236,7 +264,7 @@
                 </tr>
                 <tr>
                     <th>Github:</th>
-                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/dataset_prototype.csv" target="_blank">The Code</a></td>
+                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/project_parallel_coords.html" target="_blank">The Code</a></td>
                 </tr>
                 <tr>
                     <th>Email:</th>

@@ -181,9 +181,9 @@
 
                                                 });                                             
                         // Chart dimensions.
-                        var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 50},
-                            width = 1000 - margin.right,
-                            height = 600 - margin.top - margin.bottom;
+                        var margin = {top: 29.5, right: 19.5, bottom: 19.5, left: 50},
+                            width = 1200 - margin.right,
+                            height = 700 - margin.top - margin.bottom;
 
                         var xScale = d3.scale.linear().domain([25, 80]).nice().range([margin.left, width]),
                             yScale = d3.scale.linear().domain([70, 205]).nice().range([height, margin.top]),
@@ -283,20 +283,20 @@
                             dot.on("mouseover", function(d) { 
                                     var classes = d3.select(this).attr("class");
                                     if (classes == "dotboy") {
-                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.2");
-                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "1");
-                                        d3.selectAll(".dotboy").transition().duration(100).style("fill", "#3d93c2");
-                                        d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#3d93c2");
-                                        d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#3d93c2");
+                                        d3.selectAll(".dotgirl").attr("opacity", "0.2");
+                                        d3.selectAll(".dotboy").attr("opacity", "1");
+                                        d3.selectAll(".dotboy").style("fill", "#3d93c2");
+                                        d3.selectAll("#maleLegend").style("fill", "#3d93c2");
+                                        d3.selectAll("#maleLegendText").style("fill", "#3d93c2");
                                         tip.show(d);
                                         // tooltip.text("Cholestoral = " + d.cholestoral);
                                         // return tooltip.style("visibility", "visible");
                                     } else {
-                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.2");
-                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "1");
-                                        d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#f50e0a");
-                                        d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#f50e0a");
-                                        d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#f50e0a");
+                                        d3.selectAll(".dotboy").attr("opacity", "0.2");
+                                        d3.selectAll(".dotgirl").attr("opacity", "1");
+                                        d3.selectAll(".dotgirl").style("fill", "#f50e0a");
+                                        d3.selectAll("#femaleLegend").style("fill", "#f50e0a");
+                                        d3.selectAll("#femaleLegendText").style("fill", "#f50e0a");
                                         tip.show(d);
                                         // tooltip.text("Cholestoral = " + d.cholestoral);
                                         // return tooltip.style("visibility", "visible");
@@ -308,36 +308,35 @@
                                 .on("mouseout", function(d) { // Remove tooltip on mouseout
                                     var classes = d3.select(this).attr("class");
                                     if (classes.indexOf("boy") > -1) { 
-                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
-                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
-                                        d3.selectAll(".dotboy").transition().duration(100).style("fill", "#a6cee3");
-                                        d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#a6cee3");
-                                        d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#a6cee3");
+                                        d3.selectAll(".dotgirl").attr("opacity", "0.8");
+                                        d3.selectAll(".dotboy").attr("opacity", "0.8");
+                                        d3.selectAll(".dotboy").style("fill", "#a6cee3");
+                                        d3.selectAll("#maleLegend").style("fill", "#a6cee3");
+                                        d3.selectAll("#maleLegendText").style("fill", "#a6cee3");
                                         tip.hide();
                                         // tooltip.text("Cholestoral = " + d.cholestoral);
                                         // return tooltip.style("visibility", "hidden");
                                     } else {
-                                        d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
-                                        d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
-                                        d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#fb9a99");
-                                        d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#fb9a99");
-                                        d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#fb9a99");
+                                        d3.selectAll(".dotboy").attr("opacity", "0.8");
+                                        d3.selectAll(".dotgirl").attr("opacity", "0.8");
+                                        d3.selectAll(".dotgirl").style("fill", "#fb9a99");
+                                        d3.selectAll("#femaleLegend").style("fill", "#fb9a99");
+                                        d3.selectAll("#femaleLegendText").style("fill", "#fb9a99");
                                         tip.hide();
                                         // tooltip.text("Cholestoral = " + d.cholestoral);
                                         // return tooltip.style("visibility", "hidden");
                                     }
-                                    // d3.select(this).transition().duration(100).attr("opacity", "0.8");
-                                    // return tooltip.style("visibility", "hidden");
+                                    // d3.selectAll(".dotgirl").transition().duration(0).attr("opacity", "0.8");
                                 })
                         });
                         svg.append("text")
                            .attr({
                                 "id": "maleLegendText",
                                 "x": width - margin.right - margin.left - 10,
-                                "y": margin.top + margin.bottom,
+                                "y": margin.top + margin.bottom + 10,
                                 "font-family": "ubuntu",
                                 "font-size": "20px",
-                                // "fill": colorScale("South"),
+                                // "fill": colorScale("South"
                                 "fill": "#a6cee3",
                                 "text-anchor": "middle"
                            })
@@ -362,26 +361,26 @@
                            .attr({
                                 "id": "maleLegend",
                                 "cx": width - margin.right - margin.left - 4 * radiusScale(240),
-                                "cy": margin.top + margin.bottom - 0.5 * radiusScale(240),
+                                "cy": margin.top + margin.bottom - 0.5 * radiusScale(240) + 10,
                                 "r": radiusScale(240),
                                 "stroke": "black",
                                 "fill": "#a6cee3",
                                 "opacity": "0.8"
                            })
                            .on("mouseover", function() {
-                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.2");
-                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "1");
-                                d3.selectAll(".dotboy").transition().duration(100).style("fill", "#3d93c2");
-                                d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#3d93c2");
-                                d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#3d93c2");
+                                d3.selectAll(".dotgirl").attr("opacity", "0.2");
+                                d3.selectAll(".dotboy").attr("opacity", "1");
+                                d3.selectAll(".dotboy").style("fill", "#3d93c2");
+                                d3.selectAll("#maleLegend").style("fill", "#3d93c2");
+                                d3.selectAll("#maleLegendText").style("fill", "#3d93c2");
                                 aggregate_male_tip.show();
                             })
                            .on("mouseout", function() {
-                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
-                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
-                                d3.selectAll(".dotboy").transition().duration(100).style("fill", "#a6cee3");
-                                d3.selectAll("#maleLegend").transition().duration(100).style("fill", "#a6cee3");     
-                                d3.selectAll("#maleLegendText").transition().duration(100).style("fill", "#a6cee3");
+                                d3.selectAll(".dotgirl").attr("opacity", "0.8");
+                                d3.selectAll(".dotboy").attr("opacity", "0.8");
+                                d3.selectAll(".dotboy").style("fill", "#a6cee3");
+                                d3.selectAll("#maleLegend").style("fill", "#a6cee3");     
+                                d3.selectAll("#maleLegendText").style("fill", "#a6cee3");
                                 aggregate_male_tip.hide();                       
                            })
 
@@ -396,21 +395,99 @@
                                 "opacity": "0.8"
                            })
                            .on("mouseover", function() {
-                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.2");
-                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "1");
-                                d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#f50e0a");
-                                d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#f50e0a");
-                                d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#f50e0a");
+                                d3.selectAll(".dotboy").attr("opacity", "0.2");
+                                d3.selectAll(".dotgirl").attr("opacity", "1");
+                                d3.selectAll(".dotgirl").style("fill", "#f50e0a");
+                                d3.selectAll("#femaleLegend").style("fill", "#f50e0a");
+                                d3.selectAll("#femaleLegendText").style("fill", "#f50e0a");
                                 aggregate_female_tip.show();
                             })
                            .on("mouseout", function() {
-                                d3.selectAll(".dotboy").transition().duration(100).attr("opacity", "0.8");
-                                d3.selectAll(".dotgirl").transition().duration(100).attr("opacity", "0.8");
-                                d3.selectAll(".dotgirl").transition().duration(100).style("fill", "#fb9a99");
-                                d3.selectAll("#femaleLegend").transition().duration(100).style("fill", "#fb9a99");  
-                                d3.selectAll("#femaleLegendText").transition().duration(100).style("fill", "#fb9a99");
+                                d3.selectAll(".dotboy").attr("opacity", "0.8");
+                                d3.selectAll(".dotgirl").attr("opacity", "0.8");
+                                d3.selectAll(".dotgirl").style("fill", "#fb9a99");
+                                d3.selectAll("#femaleLegend").style("fill", "#fb9a99");  
+                                d3.selectAll("#femaleLegendText").style("fill", "#fb9a99");
                                 aggregate_female_tip.hide();                       
-                           })                           
+                           })   
+
+                        svg.append("circle")
+                           .attr({
+                                "cx": width - 4 * (margin.right + margin.left),
+                                "cy": 1.5 * (margin.top + margin.bottom),
+                                "r": radiusScale(550),
+                                "stroke": "#a6cee3",
+                                "fill": "white"
+                           })
+                           .style("stroke-width", "2px")
+
+                        svg.append("text")
+                           .attr({
+                                "x": width - 4 * (margin.right + margin.left) - 13,
+                                "y": height - 20.15 * margin.top,
+                                "font-family": "ubuntu",
+                                "font-size": "18px",
+                                "fill": "black",
+                                "text-anchor": "black"
+                           })
+                           .text("550")
+
+                        svg.append("circle")
+                           .attr({
+                                "cx": width - 4 * (margin.right + margin.left),
+                                "cy": 1.5 * (margin.top + margin.bottom) + radiusScale(550) - radiusScale(350),
+                                "r": radiusScale(350),
+                                "stroke": "#fb9a99",
+                                "fill": "white"
+                           })
+                           .style("stroke-width", "2px")
+                        
+                        svg.append("text")
+                           .attr({
+                                "x": width - 4 * (margin.right + margin.left) - 13,
+                                "y": height - 20.15 * margin.top + radiusScale(550),
+                                "font-family": "ubuntu",
+                                "font-size": "18px",
+                                "fill": "black",
+                                "text-anchor": "black"
+                           })
+                           .text("350")
+
+                        // svg.append("circle")
+                        //    .attr({
+                        //         "cx": width - 4 * (margin.right + margin.left),
+                        //         "cy": 1.5 * (margin.top + margin.bottom) + radiusScale(550) - radiusScale(250),
+                        //         "r": radiusScale(250),
+                        //         "stroke": "#a6cee3",
+                        //         "fill": "white"
+                        //    })          
+                        //    .style("stroke-width", "2px")        
+                        
+                        svg.append("text")
+                           .attr({
+                                "x": width - margin.right - margin.left - 10 - radiusScale(240),
+                                "y": margin.top - 6,
+                                "font-family": "ubuntu",
+                                "font-size": "20px",
+                                "fill": "black",
+                                "text-anchor": "middle"
+                           })
+                           .style("text-decoration", "underline")
+                           .style("font-weight", "900")
+                           .text("Gender")    
+                        
+                        svg.append("text")
+                           .attr({
+                                "x": width - 4 * (margin.right + margin.left),
+                                "y": margin.top - 6,
+                                "font-family": "ubuntu",
+                                "font-size": "20px",
+                                "fill": "black",
+                                "text-anchor": "middle"
+                           })
+                           .style("text-decoration", "underline")
+                           .style("font-weight", "900")
+                           .text("Cholestoral")                                                 
                     }
                     draw_bubble_plot(); 
                     </script>

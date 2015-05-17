@@ -568,8 +568,13 @@
     			var padding = 14;
     			var n = 4;
     			var traits = ['Illiteracy', 'HighSchoolGrad', 'LifeExpectancy', 'Murder'];
+    			var xScale = d3.scale.linear()
+				    			.range([padding / 2, size - padding / 2]);
 
-    			  // Position scales.
+				var yScale = d3.scale.linear()
+				    			.range([size - padding / 2, padding / 2]);
+    			
+    			// Position scales.
 				var x = {};
 				var y = {};
 
