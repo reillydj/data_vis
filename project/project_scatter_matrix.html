@@ -106,7 +106,7 @@
 	    <div class="container">
 
 	        <h1>My Information Visualization Collection</h1>
-	        <p>Project Bubble Chart</p>
+	        <p>Project Scatterplot Matrix</p>
 
 	    </div>
 
@@ -122,7 +122,6 @@
 <div class="container">
 <div class="row">
     <div class="col-md-10">
-        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
 
         <div class="media">
             <div class="media-left">
@@ -133,11 +132,9 @@
     </div>
     </div>
 </div>
-<div class="container">
-    <h1>SUmMARY</h1>
-</div>
 <div class="container" id="scatter">
-  <input class="filter_button" id="females" type="checkbox"><label for="slideOne"></label>Females</input><br>
+  <input class="filter_button" id="females" type="checkbox"><label for="slideOne"></label> Females Only</input><br>
+  <input class="filter_button" id="males" type="checkbox"><label for="slideOne"></label> Males Only</input><br>
   <script>
 
     var levelB = d3.select("body")
@@ -201,7 +198,7 @@
 
           var svg = d3.select(".scatter").append("svg:svg")
             .attr("width", 1500)
-            .attr("height", 1000)
+            .attr("height", 1100)
               .style({
                 "display": "block",
                 "margin": "auto"
@@ -372,7 +369,7 @@
             return c;
           }
 
-          d3.selectAll(".filter_button").on("change", function() {
+          d3.selectAll(".filter_button#females").on("change", function() {
             var type = this.value, 
             // I *think* "inline" is the default.
             display = this.checked ? "inline" : "none";
@@ -392,6 +389,27 @@
               })
             }
           });
+          
+          d3.selectAll(".filter_button#males").on("change", function() {
+            var type = this.value, 
+            // I *think* "inline" is the default.
+            display = this.checked ? "inline" : "none";
+            console.log(type);
+            console.log(this.checked);
+            if (this.checked) {
+              svg.selectAll("circle").style("opacity", function(d) {
+                if (d.sex == 0) {
+                  return 0;
+                }
+              })
+            } else {
+              svg.selectAll("circle").style("opacity", function(d) {
+                if (d.sex == 0) {
+                  return 0.8;
+                }
+              })
+            }
+          });          
 
         })
     
@@ -400,7 +418,16 @@
         </script>
 </div>
 <div class="container">
-    <div class="col-md-2">
+    <h1>Techniques</h1>
+      <p class="Text">The overall purpose of my scatterplot matrix is to allow for exploration and comparison among a patient's age, blood pressure, cholestoral, and maximum heart rate achieved during exercise. Each of these variables is mapped to a horizontal or vertical position depending on the row and column of the overall matrix, with the diagonal entries of the matrix displaying an individual feature's distribution. As is the case with each of my visualizations, the patient's gender is mapped to the color of the data point (light blue for males, light red for females). Using color as the primary pre-attentive attribute was done in order to allow easy comparison between female and male patients. </p>
+      <p class="Text">I removed all grid lines from the visualization because I wanted general trends in the data to be easily noticed, and I find grid lines to be distracting when there is no need to determine exact values. The opacity of each data point was reduced because there is a large amount of overplotting in this visualization, and a very small stroke was added to each data point to help differentiate individual circles.</p>
+      <p class="Text">I believe the lie factor of this visualization to be close to one as there is direct correspondence between a data point's position and its value. The data density of a scatterplot matrix, being a variant of a small multiple, is high. This visualization is showing relationships between four features, with an added comparison of a patient's gender, in a relatively small space. The data-ink ratio of this visualization is also high. There is very little that could be removed without losing vital information.</p>
+      <p class="Text">This visualization excels at the exploration of trends among the included features. Linear correlations among pairs of features can be very quickly ascertained, and variability of each feature can be examined by looking at the diagonal elements of the matrix. The brushing and filtering interactivity that I implemented allows for deeper exploration of subsets of the data.<p>
+    <h1>Interactivity</h1>
+    <p class="Text">I implemented filtering, brushing, and panning. Using check boxes, the user can choose to view only female or male data points. Not only does this help reduce the amount of over plotting in the visualization, but also it allows the user to focus on trends within a specific gender. The brushing and panning provides focus and context, allowing the user to interactively explore and focus on subsets of data points. I found this set of interactivity to encourage the user to discover trends within each and every corner of the dataset. </p>
+</div>
+<div class="container">
+    <!-- <div class="col-md-2"> -->
         <h2 class="page-header"><a name="contact"></a>Code</h2>
 
         <table class="table table-bordered" style="width: auto;">
@@ -425,7 +452,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    <!-- </div> -->
 </div>
 	<hr/>
 	<footer>

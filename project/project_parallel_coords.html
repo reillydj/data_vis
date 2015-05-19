@@ -97,7 +97,7 @@
 	    <div class="container">
 
 	        <h1>My Information Visualization Collection</h1>
-	        <p>Project Bubble Chart</p>
+	        <p>Project Parallel Coordinates</p>
 
 	    </div>
 
@@ -124,11 +124,14 @@
     </div>
     </div>
 </div>
-<div class="container">
-    <h1>SUmMARY</h1>
-</div>
+<div class="container female" id="parallel">
+  </div>
+  <div class="container" id="parallelbox">
+  </div>
 <div class="container male" id="parallel">
         <script>
+
+
 
         var levelA = d3.select("#parallel")
                         .append("div")
@@ -140,16 +143,40 @@
                             "height": "400px",
                             "width": "1000px"
                         });
-                
-                function draw_parallel_coordinates() {
+             d3.select("#parallelbox")
+                      .append("text")
+                       .attr({
+                            // "id":"femaleLegendText",
+                            "x": 100,
+                            "y": 100,
+                            // "text-anchor": "middle"
+                       })
+                       .style("font-weight", "bold")
+                       .style("font-size", "30px")
+                       .style("color", "#a6cee3")
+                       .text("Male   ")
 
-                    d3.csv("../data/heart_disease_male.csv", function(error, csv) {
+                    d3.select("#parallelbox")
+                      .append("text")
+                       .attr({
+                            // "id":"femaleLegendText",
+                            "x": 100,
+                            "y": 300,
+                            // "text-anchor": "middle"
+                       })
+                       .style("font-weight", "bold")
+                       .style("font-size", "30px")
+                       .style("color", "#fb9a99")
+                       .text("Female")
+                function draw_parallel_coordinates_male() {
+
+                    d3.csv("../data/heart_disease_par.csv", function(error, csv) {
                         var data = csv;
-                        var dimensions = ["Chest Pain", "Blood Pressure", "Age", "Cholestoral", "Maximum Heart Rate"];
+                        var dimensions = ["Sex", "Blood Pressure", "Age", "Cholestoral", "Maximum Heart Rate", "Chest Pain"];
 
                         colorScale = d3.scale.category10();
                         var pc = d3.parcoords()("#parallelbox")      
-                          .height(400)
+                          .height(700)
                           .width(1200)    
                           .data(data)   
                           .bundlingStrength(0.5)
@@ -157,36 +184,26 @@
                           // .color(function(d) { return colorScale(d.sex); })
                           .ticks(4)
                           .composite("destination-over")   
-                          .alpha(1) 
-                          .color("#a6cee3")  
+                          .alpha(0.8) 
+                          .color(function(d) { 
+                            if (d.Sex == 1) {
+                              return "#a6cee3";
+                            } else {
+                              return "#fb9a99";
+                            }
+                          })  
                           .dimensions(dimensions)   
                           .margin({ top: 24, left: 0, bottom: 12, right: 0 }) 
-                          .reorderable()                 
                           .render()               
                           .createAxes()
-                          .brushMode("1D-axes");
+                          .brushMode("1D-axes")
+                          .reorderable()
+                          .interactive();
                         });
 
-                    d3.select("#parallelbox")
-                      .append("text")
-                       .attr({
-                            // "id":"femaleLegendText",
-                            "x": 100,
-                            "y": 100,
-                            "text-anchor": "middle"
-                       })
-                       .style("font-weight", "bold")
-                       .style("font-size", "30px")
-                       .style("color", "#a6cee3")
-                       .text("Male")
-                }
-                draw_parallel_coordinates();
-        </script>
-</div>
-<div class="container female" id="parallel">
-        <script>
-
-        var levelA = d3.select(".container.female#parallel")
+                }                
+            
+            var levelA = d3.select(".container.female#parallel")
                         // .select("#parallel")
                         .append("div")
                         .attr({
@@ -200,14 +217,14 @@
 
             var colorScale = d3.scale.category10();
                 
-                function draw_parallel_coordinates() {
+                function draw_parallel_coordinates_female() {
 
+                  
                     d3.csv("../data/heart_disease_female.csv", function(error, csv) {
                         var data = csv;
                         var dimensions = ["Chest Pain", "Blood Pressure", "Age", "Cholestoral", "Maximum Heart Rate"];
 
-                        colorScale = d3.scale.category10();
-                        var pc = d3.parcoords()("#femaleparallelbox")      
+                        var pcfemale = d3.parcoords()("#femaleparallelbox")      
                           .height(400)
                           .width(1200)    
                           .data(data)   
@@ -219,11 +236,14 @@
                           .alpha(1)   
                           .color("#fb9a99")
                           .dimensions(dimensions)   
-                          .margin({ top: 24, left: -33, bottom: 12, right: 33 })      
-                          .reorderable()        
+                          .margin({ top: 24, left: -33, bottom: 12, right: 33 })       
                           .render()               
                           .createAxes()
-                          .brushMode("1D-axes");
+                          .brushMode("1D-axes")
+                          .reorderable()
+                          .interactive();
+
+
                         });
 
                     d3.select("#femaleparallelbox")
@@ -242,9 +262,29 @@
                        .style("font-size", "30px")
                        .style("color", "#fb9a99")
                        .text("Female")
+
+
+
                 }
-                draw_parallel_coordinates();
+                draw_parallel_coordinates_male();
+                // draw_parallel_coordinates_female();
+
+
         </script>
+</div>
+
+<div class="container female" id="parallel">
+        <script>
+
+        </script>
+</div>
+<div class="container">
+    <h1>Techniques</h1>
+      <p class="Text">For my parallel coordinates visualizations, I encoded a patient's chest pain, blood pressure, age, cholestoral, and maximum heart rate as individual lines, with the x position indicating the column and the y position indicating the value for that column. I decided to create a single parallel coordinates and map a patient's gender to the color of the data line. The user can manually filter by gender by brushing the gender axis.</p>
+      <p class="Text">Parallel coordinates have very high data density and data ink ratio as well as low lie factor, and this visualization is no exception. Several dimensions are being visualized at the same time and removing an aspect of this visualization would remove a great deal of information.</p>
+      <p class="Text">I find this visualization to excel at giving the user a lot of freedom when exploring the data. The brushing and reordering of the axes allows for a very deep exploration of trends within the data.</p>
+    <h1>Interactivity</h1>
+      <p class="Text">For this visualization's interactivity, I chose to implement brushing and reorderable axes. The brushing allows the user to continuously filter the data and subsequent panning of the filtered windows allows the user to see how each other dimension moves with the selected column. By reordering the axes, a user can change the layout of the parallel coordinates. Often times, trends among the features are more easily teased out depending on the ordering of the axes. </p>
 </div>
 <div class="container">
     <div class="col-md-2">

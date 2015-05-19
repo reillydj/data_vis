@@ -72,7 +72,7 @@
 	    <div class="container">
 
 	        <h1>My Information Visualization Collection</h1>
-	        <p>Project Dataset Prototype</p>
+	        <p>Project Report</p>
 
 	    </div>
 
@@ -88,7 +88,7 @@
 <div class="container">
 <div class="row">
     <div class="col-md-10">
-        <h2 class="page-header"><a name="about"></a>Assignment Details</h2>
+        <h2 class="page-header"><a name="about"></a></h2>
 
         <div class="media">
             <div class="media-left">
@@ -100,25 +100,24 @@
     </div>
 </div>
 <div class="container">
-    <h1>Dataset Summary</h1>
-        <p class="Text">The dataset I am using in this project is the Heart Disease Data Set. I obtained this dataset from the UCI machine learning dataset repository. Thus, it was originally framed as a four-way classification dataset with the target variable being the type of diagnosis of heart disease in a patient.  It contains categorical, integer, and real-valued variables. There are 302 observations and 14 features with no missing values. For more information on this dataset, please see <a href="dataset.html" target="_blank">my dataset write-up</a>.</p>
-    <h1>Sketch Summary</h1>
-        <p class="Text">My sketch includes a simple, non-interactive version of my proposed bubble plot and parallel coordinates visualization. For the purposes of this sketch, both are included on this page. However, in my final implementation, I will have individual links to each separate visualization, since I hope to make each visualization large, self-contained, and easy to navigate. For more information on my proposed project sketch, please see <a href="dataset_sketch.html" target="_blank">my dataset sketch</a>.</p>
+    <h1>Visualizations</h1>
+    <p>Click on one of the snapshots below to explore the interactive visualization and read about the implemented techniques and interactivity. </p>
+    <a href="project_bubble_chart.html" target="_blank"><img src="../img/bubble.png" style="border:2px solid black" alt="Bubble Plot" width="350" height="350"/> </a>
+    <a href="project_scatter_matrix.html" target="_blank"><img src="../img/scatter.png" style="border:2px solid black" alt="Scatterplot Matrix" width="350" height="350"/> </a>
+    <a href="project_parallel_coords.html" target="_blank"><img src="../img/parallel.png" style="border:2px solid black" alt="Parallel Coordinates" width="350" height="350"/> </a>
 </div>
 <div class="container">
-    <div class="bubble">
-        <a href="project_bubble_chart.html" target="_blank">Bubble Chart</a>
-    </div>
-</div>
-<div class="container" id="parallel">
-    <a href="project_parallel_coords.html" target="_blank">Parallel Coordinates</a>
-</div>
-<div class="container" id="parallel">
-    <a href="project_scatter_matrix.html" target="_blank">Scatterplot Matrix</a>
+    <h1>Feedback</h1>
+        <p class="Text">The prototype that I demonstrated in-class featured only two visualizations with limited interactivity. I received feedback that I might explore a scatterplot matrix. I was originally going to create a small multiple of histograms for each level of chest pain. However, I felt that the scatterplot matrix idea would allow me to give an overview of trends among many different features. I decided to pursue a scatterplot matrix because of this, and I believe it was a good choice. I also received feedback on techniques used to combat overplotting. In particular, it was brought to my attention that adding a stroke to each circle would help the user distinguish between data points. I found this feedback to be particularly useful as overplotting was an obstacle in each of my visualizations.</p>
+    <h1>Challenges</h1>
+        <p class="Text">The biggest challenge I faced was with my parallel coordinates visualization. Since I was using the parcoords package, I didn't find a way to split the visualization by gender and have brushing applied to one of the plots also apply to the other. I spent some time trying to dynamically filter and pass data points that had been brushed from one plot to the other, but scope of variables and requirements made by the parcoords package inhibited this. This was a motivating factor for combining the two plots into a single parallel coordinates and adding the gender as an axis to allow it to still be subset.</p>
+    <h1>Conclusion</h1>
+        <p class="Text">The primary discovery I made using the visualizations I created was the strong influence of age. The scatterplot matrix showed very weak correlations among nearly all combinations of the features. However, the bubble plot visualization shows a patient's maximum heart rate as being negatively correlated with a patient's age. Furthermore, by brushing the age axis in my parallel coordinates visualization and panning up and down, one can see slightly higher cholestoral levels as well as more patients having more severe levels of chest pain.</p>
+        <p class="Text">The influence of age in the data would suggest to me that it would be one of the strongest predictors of the other features in this dataset, which would be very useful information if one were to pursue a machine learning model to predict one of the dataset's features. Other less useful features could be readily discarded as they can be seen to have negligible correlation with the rest of the features, as was noted by my scatterplot matrix.</p>
 </div>
 <div class="container">
     <div class="col-md-2">
-        <h2 class="page-header"><a name="contact"></a>Code</h2>
+        <h2 class="page-header"><a name="contact"></a>Data</h2>
 
         <table class="table table-bordered" style="width: auto;">
             <thead>
@@ -131,10 +130,6 @@
                 <tr>
                     <th>Github:</th>
                     <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/data/heart_disease.csv" target="_blank">The Data</a></td>
-                </tr>
-                <tr>
-                    <th>Github:</th>
-                    <td><a href="https://github.com/reillydj/data_vis/blob/gh-pages/project/dataset_prototype.csv" target="_blank">The Code</a></td>
                 </tr>
                 <tr>
                     <th>Email:</th>

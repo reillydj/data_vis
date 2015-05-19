@@ -124,9 +124,7 @@
     </div>
     </div>
 </div>
-<div class="container">
-    <h1>SUmMARY</h1>
-</div>
+
 <div class="container">
     <div class="bubble">
         <script>
@@ -493,6 +491,14 @@
                     </script>
                 </div>
             </div>
+<div class="container">
+    <h1>Techniques</h1>
+        <p class="Text">For my bubble plot visualization, I encoded the age of a patient to the horizontal position and the maximum heart rate a patient achieved during exercise to the vertical position. The cholestoral level of a patient is mapped to the size of a bubble, and the gender of a patient is mapped to the color of a bubble. In order to combat overplotting, a black stroke was added and the opacity of each bubble was reduced. In addition, when the user hovers over a data point, all of the data points in the data set that share that point's gender are highlighted and those data points that don't have their opacity further reduced. I believed this to be a very effective way of not only combating overplotting but also providing focus and context to each gender. There is no transition between the highlighting and fading of data points because I noticed a browser would get stuck between states when a user would quickly hover over multiple points. This resulted in the opacity of data points to be reversed. Grid lines were removed from this visualization because I find them to be distracting while providing minimal benefit to a visualization. Finally, I plotted larger bubbles before smaller bubbles to avoid obfuscating the data.</p>
+        <p class="Text">As is the case with bubble plots, there is some lie factor involved in interpreting the size of each bubble as people tend to underestimate volume of shapes. However, there is direct correspondence between a data point's horizontal and vertical position and its value. The data density of this visualization is high as it is simultaneously encoding four dimensions of data in a single plot. The data ink ratio is also high. Removing an attribute of a data point would be removing an entire dimension from the visualization.</p>
+        <p class="Text">I believe this visualization excels at showing a clear negative correlation between a patient's age and a patient's maximum heart rate while simultaneously visualizing several dimensions at once. I think it also uses the color pre-attentive attribute very effectively by focusing on a specific gender when a user hovers over an individual point.</p>
+    <h1>Interactivity</h1>
+        <p class="Text">All of the interactivity in this visualization is implemented during a hover over. Hovering over a data point simultaneously provides focus, by highlighting data points of the same gender, context, by fading data points of the opposite gender, and details on demand, by providing a tooltip with specific values of that data point. I also added a tooltip over the legend, which shows summary statistics of each gender. I believe this set of interactivity techniques effectively focuses the user's attention.</p>
+</div>
 <div class="container">
     <div class="col-md-2">
         <h2 class="page-header"><a name="contact"></a>Code</h2>
