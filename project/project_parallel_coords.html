@@ -143,34 +143,34 @@
                             "height": "400px",
                             "width": "1000px"
                         });
-             d3.select("#parallelbox")
-                      .append("text")
-                       .attr({
-                            // "id":"femaleLegendText",
-                            "x": 100,
-                            "y": 100,
-                            // "text-anchor": "middle"
-                       })
-                       .style("font-weight", "bold")
-                       .style("font-size", "30px")
-                       .style("color", "#a6cee3")
-                       .text("Male   ")
+             // d3.select("#parallelbox")
+             //          .append("text")
+             //           .attr({
+             //                // "id":"femaleLegendText",
+             //                "x": 100,
+             //                "y": 100,
+             //                // "text-anchor": "middle"
+             //           })
+             //           .style("font-weight", "bold")
+             //           .style("font-size", "30px")
+             //           .style("color", "#a6cee3")
+             //           .text("Male   ")
 
-                    d3.select("#parallelbox")
-                      .append("text")
-                       .attr({
-                            // "id":"femaleLegendText",
-                            "x": 100,
-                            "y": 300,
-                            // "text-anchor": "middle"
-                       })
-                       .style("font-weight", "bold")
-                       .style("font-size", "30px")
-                       .style("color", "#fb9a99")
-                       .text("Female")
+             //        d3.select("#parallelbox")
+             //          .append("text")
+             //           .attr({
+             //                // "id":"femaleLegendText",
+             //                "x": 100,
+             //                "y": 300,
+             //                // "text-anchor": "middle"
+             //           })
+             //           .style("font-weight", "bold")
+             //           .style("font-size", "30px")
+             //           .style("color", "#fb9a99")
+             //           .text("Female")
                 function draw_parallel_coordinates_male() {
 
-                    d3.csv("../data/heart_disease_par.csv", function(error, csv) {
+                    d3.csv("../data/heart_disease_sex.csv", function(error, csv) {
                         var data = csv;
                         var dimensions = ["Sex", "Blood Pressure", "Age", "Cholestoral", "Maximum Heart Rate", "Chest Pain"];
 
@@ -186,7 +186,7 @@
                           .composite("destination-over")   
                           .alpha(0.8) 
                           .color(function(d) { 
-                            if (d.Sex == 1) {
+                            if (d.Sex == "Male") {
                               return "#a6cee3";
                             } else {
                               return "#fb9a99";
@@ -246,22 +246,22 @@
 
                         });
 
-                    d3.select("#femaleparallelbox")
-                      .append("text")
-                       .attr({
-                            // "id":"femaleLegendText",
-                            "x": 100,
-                            "y": 100,
-                            "font-family": "ubuntu",
-                            "font-size": "30px",
-                            // "fill": colorScale("South"),
-                            "fill": "#fb9a99",
-                            "text-anchor": "middle"
-                       })
-                       .style("font-weight", "bold")
-                       .style("font-size", "30px")
-                       .style("color", "#fb9a99")
-                       .text("Female")
+                    // d3.select("#femaleparallelbox")
+                    //   .append("text")
+                    //    .attr({
+                    //         // "id":"femaleLegendText",
+                    //         "x": 100,
+                    //         "y": 100,
+                    //         "font-family": "ubuntu",
+                    //         "font-size": "30px",
+                    //         // "fill": colorScale("South"),
+                    //         "fill": "#fb9a99",
+                    //         "text-anchor": "middle"
+                    //    })
+                    //    .style("font-weight", "bold")
+                    //    .style("font-size", "30px")
+                    //    .style("color", "#fb9a99")
+                    //    .text("Female")
 
 
 
